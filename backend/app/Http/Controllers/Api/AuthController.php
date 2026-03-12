@@ -22,7 +22,7 @@ class AuthController extends Controller
          $token = JWTAuth::fromUser($user);
 
          return response()->json([
-            'message' => 'User successfully registered',
+            'message' => 'Utilisateur enregistré avec succès',
             'user' => $user,
             'access_token' => $token,
             'token_type' => 'bearer',
@@ -39,7 +39,7 @@ class AuthController extends Controller
 
         if (!$token = auth('api')->attempt($credentials)) {
             return response()->json([
-                'message' => 'Unauthorized'
+                'message' => 'Non autorisé'
             ], 401);
         }
 
@@ -58,7 +58,7 @@ class AuthController extends Controller
         auth('api')->logout();
 
         return response()->json([
-            'message' => 'Successfully logged out'
+            'message' => 'Déconnexion réussie'
         ]);
     }
 

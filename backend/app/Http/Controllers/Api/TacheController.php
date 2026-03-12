@@ -20,7 +20,7 @@ class TacheController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Tache::with(['project', 'assignees']);
+        $query = Tache::with(['projet', 'assignees']);
 
         // Filtres globaux
         if ($request->filled('status')) {
@@ -31,11 +31,11 @@ class TacheController extends Controller
             $query->where('priority', $request->priority);
         }
 
-        $tasks = $query->latest();
+        $tasks = $query->latest()->get();
+
 
         return TaskResource::collection($tasks);
     }
-
     /**
      * Show single task (visible par tous)
      */
@@ -43,7 +43,7 @@ class TacheController extends Controller
     {
         if($task) {
             // avoir le projet a lequel la tache est appartient ainsi que les utilisateurs
-            $task->load(['project', 'assignees']);
+            $task->load(['projet', 'assignees']);
             
             return new TaskResource($task);
             
@@ -54,7 +54,6 @@ class TacheController extends Controller
         }
 
     }
-
     /**
      * Store new task (owner uniquement)
      */
@@ -77,66 +76,114 @@ class TacheController extends Controller
             ], 500);
         }
     }
-
     /**
      * Update task (owner uniquement)
      */
     public function update(UpdateTaskRequest $request, Tache $task)
     {
-        $this->authorizeProjectOwner($task->project);
+        try {
+            $taskLoader = $task->load("projet");
 
-        $task->update($request->validated());
+            $this->authorizeProjectOwner($taskLoader->projet);
+    
+            $task->update($request->validated());
+    
+            return new TaskResource($task);
 
-        return new TaskResource($task);
+        } catch(Exception $e) {
+
+            return response()->json([
+                'message' => 'Erreur serveur',
+                'error' => $e->getMessage(),
+                "ereur_tous" => $e
+            ], 500);
+        }
     }
-
     /**
      * Delete task (owner uniquement)
      */
     public function destroy(Tache $task)
     {
-        $this->authorizeProjectOwner($task->project);
+        try {
+            $taskLoader = $task->load("projet");
 
-        $task->delete();
+            // return response()->json($taskLoader->projet);
 
-        return response()->json([
-            'message' => 'Task deleted successfully'
-        ]);
+            $this->authorizeProjectOwner($taskLoader->projet);
+    
+            $task->delete();
+    
+            return response()->json([
+                'message' => 'La tache été supprimée avec succès'
+            ]);
+        } catch(Exception $e) {
+
+            return response()->json([
+                'message' => 'Erreur serveur',
+                'error' => $e->getMessage(),
+                "ereur_tous" => $e
+            ], 500);
+        }
     }
-
     /**
      * Assign users (owner uniquement)
      */
     public function assign(AssignUsersRequest $request, Tache $task)
     {
-        $this->authorizeProjectOwner($task->project);
+        try {
+            //code...
+            $taskLoader = $task->load("projet");
 
-        $task->assignees()->sync($request->user_ids);
-
-        return response()->json([
-            'message' => 'Users assigned successfully'
-        ]);
+            $this->authorizeProjectOwner($taskLoader->projet);
+    
+            $task->assignees()->sync($request->user_ids);
+    
+            return response()->json([
+                'message' => 'Users assigned successfully'
+            ]);
+        } catch (Exception $e) {
+            //throw $th;
+            return response()->json([
+                'message' => 'Erreur serveur',
+                'error' => $e->getMessage(),
+                "ereur_tous" => $e
+            ], 500);
+        }
     }
-
     /**
      * Unassign users (owner uniquement)
      */
     public function unassign(AssignUsersRequest $request, Tache $task)
     {
-        $this->authorizeProjectOwner($task->project);
+        try {
+            //code...
+            $taskLoader = $task->load("projet");
 
-        $task->assignees()->detach($request->user_ids);
-
-        return response()->json([
-            'message' => 'Users unassigned successfully'
-        ]);
+            $this->authorizeProjectOwner($taskLoader->projet);
+    
+            $task->assignees()->detach($request->user_ids);
+    
+            return response()->json([
+                'message' => 'Users unassigned successfully'
+            ]);
+        } catch (Exception $e) {
+            //throw $th;
+            return response()->json([
+                'message' => 'Erreur serveur',
+                'error' => $e->getMessage(),
+                "ereur_tous" => $e
+            ], 500);
+        }
     }
 
     private function authorizeProjectOwner(Projet $project)
 {
     if (auth()->id() !== $project->user_id) {
         
-        abort(403, 'Unauthorized');
+        return response()->json([
+            'message' => 'Desolé, vous n\'avez pas l\'autorisation pour effectuer cette requête',
+            'status' => 403,
+        ], 403);
     }
 }
 }
