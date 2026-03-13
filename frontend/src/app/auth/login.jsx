@@ -1,17 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "./useTheme";
+import InputField from "../../components/inputField.jsx"
+// import { useTheme } from "./useTheme";
 
-const IconEye = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zm0 12.5a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
-  </svg>
-);
-const IconEyeOff = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 7a5 5 0 0 1 5 5c0 .64-.13 1.26-.36 1.82l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.74C21.27 7.61 17 4.5 12 4.5c-1.24 0-2.43.2-3.54.57l2.17 2.17C11.12 7.1 11.55 7 12 7zM2 4.27l2.28 2.28.46.46A11.8 11.8 0 0 0 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65a3 3 0 0 0 3 3c.22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53a5 5 0 0 1-5-5c0-.79.2-1.53.53-2.2zm4.31-.78 3.15 3.15.02-.16a3 3 0 0 0-3-3l-.17.01z"/>
-  </svg>
-);
+
 const IconMail = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
     <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/>
@@ -23,83 +15,19 @@ const IconLock = () => (
   </svg>
 );
 
-const G = `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
-  html,body{margin:0;padding:0;width:100%;height:100%;font-family:'DM Sans',sans-serif;overflow:hidden;}
-  #root{width:100%;height:100%;}
-  *,*::before,*::after{box-sizing:border-box;}
-  @keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-  @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-  @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-  @keyframes glow{0%,100%{box-shadow:0 0 25px rgba(99,102,241,.3)}50%{box-shadow:0 0 55px rgba(99,102,241,.6)}}
-  @keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-  @keyframes orb{0%,100%{transform:scale(1) translate(0,0)}50%{transform:scale(1.07) translate(12px,-12px)}}
-  input:-webkit-autofill{-webkit-box-shadow:0 0 0 1000px #0d1220 inset!important;-webkit-text-fill-color:white!important;}
-  .login-input{width:100%;padding:14px 46px 14px 44px;border-radius:12px;border:1px solid rgba(99,102,241,.18);background:#0d1220;color:white;font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:border-color .2s,box-shadow .2s;}
-  .login-input:focus{border-color:rgba(99,102,241,.6);box-shadow:0 0 0 3px rgba(99,102,241,.12);}
-  .login-input::placeholder{color:#475569;}
-  .auth-link{color:#818cf8;cursor:pointer;font-weight:600;text-decoration:none;position:relative;transition:color .2s;}
-  .auth-link::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1.5px;background:linear-gradient(90deg,#6366f1,#a78bfa);transition:width .25s ease;}
-  .auth-link:hover{color:#a5b4fc;}
-  .auth-link:hover::after{width:100%;}
-`;
-
-type LoginForm = { email: string; password: string };
-
-interface FieldProps {
-  label:       string;
-  inputType:   string;
-  id:          keyof LoginForm;
-  placeholder: string;
-  icon:        React.ReactNode;
-  value:       string;
-  onChange:    (v: string) => void;
-  onEnter:     () => void;
-  showToggle?: boolean;
-  showPw?:     boolean;
-  onTogglePw?: () => void;
-}
-
-function InputField({ label, inputType, id, placeholder, icon, value, onChange, onEnter, showToggle, showPw, onTogglePw }: FieldProps) {
-  return (
-    <div style={{ marginBottom:"18px" }}>
-      <label htmlFor={id} style={{ display:"block", color:"#64748b", fontSize:"11px", fontWeight:600, marginBottom:"7px", letterSpacing:"0.6px", textTransform:"uppercase" }}>{label}</label>
-      <div style={{ position:"relative" }}>
-        <span style={{ position:"absolute", left:"14px", top:"50%", transform:"translateY(-50%)", color:"#475569", display:"flex", alignItems:"center", pointerEvents:"none" }}>{icon}</span>
-        <input
-          id={id} name={id}
-          className="login-input"
-          type={showToggle ? (showPw ? "text" : "password") : inputType}
-          value={value}
-          onChange={e => onChange(e.target.value)}
-          onKeyDown={e => e.key === "Enter" && onEnter()}
-          placeholder={placeholder}
-          autoComplete={id === "email" ? "email" : "current-password"}
-        />
-        {showToggle && (
-          <button type="button" onClick={onTogglePw}
-            style={{ position:"absolute", right:"12px", top:"50%", transform:"translateY(-50%)", background:"none", border:"none", color:"#475569", cursor:"pointer", display:"flex", alignItems:"center", padding:"6px", borderRadius:"6px", transition:"color .15s" }}
-            onMouseEnter={e => (e.currentTarget.style.color = "#818cf8")}
-            onMouseLeave={e => (e.currentTarget.style.color = "#475569")}>
-            {showPw ? <IconEyeOff /> : <IconEye />}
-          </button>
-        )}
-      </div>
-    </div>
-  );
-}
 
 export default function Login() {
+
   const navigate = useNavigate();
-  const { isDark } = useTheme();
+  // const { isDark } = useTheme();
   const [email,    setEmail]    = useState("");
   const [password, setPassword] = useState("");
   const [showPw,   setShowPw]   = useState(false);
   const [loading,  setLoading]  = useState(false);
   const [err,      setErr]      = useState("");
 
-  const bg    = isDark ? "#05080f" : "#f4f5fb";
-  const textH = isDark ? "white"   : "#0f172a";
+  // const bg    = isDark ? "#05080f" : "#f4f5fb";
+  // const textH = isDark ? "white"   : "#0f172a";
 
   const submit = () => {
     setErr("");
@@ -111,8 +39,7 @@ export default function Login() {
 
   return (
     <>
-      <style>{G}</style>
-      <div style={{ width:"100vw", height:"100vh", background:bg, display:"flex", position:"relative", overflow:"hidden", transition:"background .3s" }}>
+      <div style={{ width:"100vw", height:"100vh", background: "#05080f", display:"flex", position:"relative", overflow:"hidden", transition:"background .3s" }}>
 
         {/* Orbs */}
         <div style={{ position:"fixed", inset:0, pointerEvents:"none", zIndex:0 }}>
@@ -128,7 +55,7 @@ export default function Login() {
             <div style={{ display:"flex", justifyContent:"center", marginBottom:"40px" }}>
               <div style={{ width:"68px", height:"68px", borderRadius:"22px", background:"linear-gradient(135deg,#6366f1,#8b5cf6)", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"'Syne',sans-serif", fontWeight:900, fontSize:"32px", color:"white", boxShadow:"0 8px 40px rgba(99,102,241,.5)", animation:"glow 3s ease-in-out infinite" }}>T</div>
             </div>
-            <h2 style={{ fontFamily:"'Syne',sans-serif", fontWeight:800, fontSize:"38px", color:textH, letterSpacing:"-1.5px", lineHeight:1.12, marginBottom:"16px" }}>
+            <h2 style={{ fontFamily:"'Syne',sans-serif", fontWeight:800, fontSize:"38px", color: "white", letterSpacing:"-1.5px", lineHeight:1.12, marginBottom:"16px" }}>
               Bon retour.<br/>
               <span style={{ background:"linear-gradient(135deg,#6366f1,#a78bfa,#38bdf8)", backgroundSize:"200%", animation:"gradShift 4s ease infinite", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>Content de vous revoir.</span>
             </h2>
@@ -155,11 +82,31 @@ export default function Login() {
           </button>
 
           <div style={{ animation:"slideUp .5s ease" }}>
-            <h1 style={{ fontFamily:"'Syne',sans-serif", fontWeight:800, fontSize:"26px", color:textH, letterSpacing:"-0.8px", marginBottom:"6px" }}>Content de vous revoir 👋</h1>
+            <h1 style={{ fontFamily:"'Syne',sans-serif", fontWeight:800, fontSize:"26px", color: "#05080f", letterSpacing:"-0.8px", marginBottom:"6px" }}>Content de vous revoir 👋</h1>
             <p style={{ color:"#475569", fontSize:"14px", marginBottom:"32px" }}>Connectez-vous pour accéder à votre tableau de bord.</p>
 
-            <InputField label="Adresse email" inputType="email"    id="email"    placeholder="jean@exemple.com" icon={<IconMail />} value={email}    onChange={setEmail}    onEnter={submit} />
-            <InputField label="Mot de passe"  inputType="password" id="password" placeholder="••••••••"          icon={<IconLock />} value={password} onChange={setPassword} onEnter={submit} showToggle showPw={showPw} onTogglePw={() => setShowPw(v => !v)} />
+            <InputField 
+              label="Adresse email" 
+              inputType="email"
+              id="email"
+              placeholder="jean@exemple.com" 
+              icon={<IconMail />} 
+              value={email}
+              onChange={setEmail}
+              onEnter={submit}
+            />
+            <InputField 
+              label="Mot de passe"
+              inputType="password" 
+              id="password" placeholder="••••••••"
+              icon={<IconLock />} 
+              value={password} 
+              onChange={setPassword}
+              onEnter={submit}
+              showToggle
+              showPw={showPw}
+              onTogglePw={() => setShowPw(v => !v)}
+            />
 
             {err && (
               <div style={{ background:"rgba(248,113,113,.09)", border:"1px solid rgba(248,113,113,.22)", borderRadius:"10px", padding:"11px 15px", marginBottom:"16px", color:"#f87171", fontSize:"13px" }}>⚠ {err}</div>
@@ -174,7 +121,7 @@ export default function Login() {
 
             <p style={{ textAlign:"center", marginTop:"22px", color:"#475569", fontSize:"13px" }}>
               Pas encore de compte ?{" "}
-              <span className="auth-link" onClick={() => navigate("/register")}>S'inscrire</span>
+              <span className="auth-link" onClick={() => navigate("/auth/register")}>S'inscrire</span>
             </p>
           </div>
         </div>

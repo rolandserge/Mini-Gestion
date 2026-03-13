@@ -32,7 +32,8 @@ const G = `
   }
 `;
 
-export default function Page() {
+export default function Accueil() {
+
   const navigate = useNavigate();
   const { theme, setTheme, isDark } = useTheme();
   const [hov, setHov] = useState(null);
@@ -112,7 +113,7 @@ export default function Page() {
 
             {/* CTA */}
             <button
-              onClick={() => navigate("/register")}
+              onClick={() => navigate("/auth/register")}
               onMouseEnter={e => { e.currentTarget.style.transform="scale(1.07)"; e.currentTarget.style.boxShadow="0 8px 28px rgba(99,102,241,.55)"; }}
               onMouseLeave={e => { e.currentTarget.style.transform="scale(1)"; e.currentTarget.style.boxShadow="0 4px 18px rgba(99,102,241,.4)"; }}
               style={{ padding:"10px 22px", borderRadius:"10px", border:"none", background:"linear-gradient(135deg,#6366f1,#8b5cf6)", color:"white", cursor:"pointer", fontFamily:"'DM Sans',sans-serif", fontWeight:600, fontSize:"14px", boxShadow:"0 4px 18px rgba(99,102,241,.4)", transition:"transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s", whiteSpace:"nowrap" }}>
