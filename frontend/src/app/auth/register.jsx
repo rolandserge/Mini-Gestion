@@ -120,12 +120,9 @@ export default function Register() {
 
         {/* RIGHT PANEL */}
         <div className="right-panel">
-          <button 
-            onClick={() => navigate("/")}
-            className="close-btn"
-          >
-            ✕
-          </button>
+          <div className="close-btn-container">
+            <span className="close-link" onClick={() => navigate("/")}>✕</span>
+          </div>
 
           <div className="form-container">
             <h1 className={`form-title ${isMounted && !isDark ? 'light' : ''}`}>Créez votre compte</h1>
