@@ -25,6 +25,8 @@ const G = `
   input:-webkit-autofill{-webkit-box-shadow:0 0 0 1000px #0d1220 inset!important;-webkit-text-fill-color:white!important;}
   .login-input{width:100%;padding:14px 46px 14px 44px;border-radius:12px;border:1px solid rgba(99,102,241,.18);background:#0d1220;color:white;font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:border-color .2s,box-shadow .2s;}
   .login-input:focus{border-color:rgba(99,102,241,.6);box-shadow:0 0 0 3px rgba(99,102,241,.12);}
+  .login-input.error{border-color:#f87171;background:rgba(248,113,113,.08);}
+  .login-input.error:focus{border-color:#f87171;box-shadow:0 0 0 3px rgba(248,113,113,.12);}
   .login-input::placeholder{color:#475569;}
   .auth-link{color:#818cf8;cursor:pointer;font-weight:600;text-decoration:none;position:relative;transition:color .2s;}
   .auth-link::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1.5px;background:linear-gradient(90deg,#6366f1,#a78bfa);transition:width .25s ease;}
@@ -33,7 +35,7 @@ const G = `
 `;
 
 
-export default function InputField({id, showPw, className, inputType, value, showToggle, placeholder, onTogglePw, label, icon}) {
+export default function InputField({id, showPw, className, inputType, value, showToggle, placeholder, onTogglePw, label, icon, onChange, onEnter, error}) {
 
     return (
         <>
@@ -41,13 +43,13 @@ export default function InputField({id, showPw, className, inputType, value, sho
             <div style={{ marginBottom: "18px"}}>
                 <label htmlFor={id} style={{ display:"block", color:"#64748b", fontSize:"11px", fontWeight:600, marginBottom:"7px", letterSpacing:"0.6px", textTransform:"uppercase" }}>{label}</label>
                 <div style={{ position:"relative" }}>
-                    <span style={{ position:"absolute", left:"14px", top:"50%", transform:"translateY(-50%)", color:"#475569", display:"flex", alignItems:"center", pointerEvents:"none" }}>{icon}</span>
+                    <span style={{ position:"absolute", left:"14px", top:"50%", transform:"translateY(-50%", color:"#475569", display:"flex", alignItems:"center", pointerEvents:"none" }}>{icon}</span>
                     <input
                         id={id} 
                         name={id}
-                        className="login-input"
+                        className={`login-input ${error ? 'error' : ''}`}
                         type={showToggle ? (showPw ? "text" : "password") : inputType}
-                        // value={value}
+                        value={value}
                         onChange={e => onChange(e.target.value)}
                         onKeyDown={e => e.key === "Enter" && onEnter()}
                         placeholder={placeholder}
@@ -55,13 +57,26 @@ export default function InputField({id, showPw, className, inputType, value, sho
                     />
                     {showToggle && (
                         <button type="button" onClick={onTogglePw}
-                            style={{ position:"absolute", right:"12px", top:"50%", transform:"translateY(-50%)", background:"none", border:"none", color:"#475569", cursor:"pointer", display:"flex", alignItems:"center", padding:"6px", borderRadius:"6px", transition:"color .15s" }}
+                            style={{ position:"absolute", right:"12px", top:"50%", transform:"translateY(-50%", background:"none", border:"none", color:"#475569", cursor:"pointer", display:"flex", alignItems:"center", padding:"6px", borderRadius:"6px", transition:"color .15s" }}
                             onMouseEnter={e => (e.currentTarget.style.color = "#818cf8")}
                             onMouseLeave={e => (e.currentTarget.style.color = "#475569")}>
                             {showPw ? <IconEyeOff /> : <IconEye />}
                         </button>
                     )}
                 </div>
+                {error && (
+                    <div style={{ 
+                        color: "#f87171", 
+                        fontSize: "12px", 
+                        marginTop: "6px", 
+                        display: "flex", 
+                        alignItems: "center", 
+                        gap: "4px" 
+                    }}>
+                        <span style={{ fontSize: "14px" }}>⚠</span>
+                        {error}
+                    </div>
+                )}
             </div>
         </>
     )
