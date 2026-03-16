@@ -1,39 +1,18 @@
-import Page from './app/index.jsx'
-import Register from './app/auth/register.jsx'
-import Login from './app/auth/login.jsx'
-import Dashbord from "./app/dashbord/index.jsx"
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./routes/index.jsx";
+import { useEffect } from "react";
+import { useAuth } from "./store/authStore.js";
 
 function App() {
-
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Page />,
-    },
-    {
-      path: "/auth/login",
-      element: <Login />
-    },
-    {
-      path: "/auth/register",
-      element: <Register />
-    },
-    {
-      path: "/dashbord",
-      element: <Dashbord />
+  useEffect(() => {
+    const { token, checkAuth } = useAuth.getState();
+    if (token) {
+      // On vérifie si le token est toujours valide côté serveur
+      checkAuth();
     }
-  ])
+  }, []);
 
-  // return (
-  //   <Routes>
-  //     <Route path="/" element={<Page />} />
-  //     <Route path="/register"  element={<Register />} />
-  //     <Route path="/login"     element={<Login />} />
-  //   </Routes>
-
-  return <RouterProvider router={router} />
-  
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;

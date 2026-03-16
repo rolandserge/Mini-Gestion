@@ -14,9 +14,9 @@ Route::post('/login', [AuthController::class, 'login']);
 
 
 Route::middleware('auth:api')->group(function () {
-    Route::get('me', [AuthController::class, 'me']);
-    Route::post('logout', [AuthController::class, 'logout']);
-    // Route::post('refresh', [AuthController::class, 'refresh']);
+    Route::get('/me', [AuthController::class, 'me']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('refresh', [AuthController::class, 'refresh']);
 });
 
 
@@ -43,7 +43,7 @@ Route::middleware('auth:api')->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    
+
     // Liste toutes les tâches (avec filtres ?status=&priority=)
     Route::get('/tasks', [TacheController::class, 'index']);
 
@@ -55,7 +55,7 @@ Route::middleware('auth:api')->group(function () {
 
     // Modifier une tâche
     Route::put('/tasks/{task}', [TacheController::class, 'update']);
-    Route::patch('/tasks/{task}', [TacheController::class, 'update']);
+    Route::patch('/tasks/{task}/status', [TacheController::class, 'updateStatus']);
     // Supprimer une tâche
     Route::delete('/tasks/{task}', [TacheController::class, 'destroy']);
 

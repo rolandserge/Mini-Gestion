@@ -12,12 +12,14 @@ class Projet extends Model
 {
     protected $fillable = ["nom", "description", "couleur", "user_id"];
 
-    public function user() : BelongsTo {
+    public function user(): BelongsTo
+    {
 
         return $this->belongsTo(User::class, "user_id");
     }
 
-    public function tasks() : HasMany {
+    public function tasks(): HasMany
+    {
 
         return $this->hasMany(Tache::class);
     }

@@ -44,9 +44,9 @@ class TacheController extends Controller
         if($task) {
             // avoir le projet a lequel la tache est appartient ainsi que les utilisateurs
             $task->load(['project', 'assignees']);
-            
+
             return new TaskResource($task);
-            
+
         } else {
             return response()->json([
                 "message" => "La tache est introuvable veillez charger une bonne tache"
@@ -61,15 +61,15 @@ class TacheController extends Controller
     public function store(StoreTaskRequest $request, Projet $project)
     {
         try {
-            
+
             $this->authorizeProjectOwner($project);
-            
+
             $task = $project->tasks()->create($request->validated());
-            
+
             return new TaskResource($task);
-            
+
         } catch(Exception $e) {
-            
+
             return response()->json([
                 'message' => 'Erreur serveur',
                 'error' => $e->getMessage(),
@@ -86,6 +86,24 @@ class TacheController extends Controller
         $this->authorizeProjectOwner($task->project);
 
         $task->update($request->validated());
+
+        return new TaskResource($task);
+    }
+
+    public function updateStatus(Request $request, Tache $task)
+    {
+        // vérifier que l'utilisateur est propriétaire du projet
+        $this->authorizeProjectOwner($task->project);
+
+        // validation
+        $request->validate([
+            'statut' => 'required|in:A faire,En cours,Termine'
+        ]);
+
+        // mise à jour du statut
+        $task->update([
+            'statut' => $request->statut
+        ]);
 
         return new TaskResource($task);
     }
@@ -135,7 +153,7 @@ class TacheController extends Controller
     private function authorizeProjectOwner(Projet $project)
 {
     if (auth()->id() !== $project->user_id) {
-        
+
         abort(403, 'Unauthorized');
     }
 }

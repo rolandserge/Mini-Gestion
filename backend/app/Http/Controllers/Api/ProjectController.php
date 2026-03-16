@@ -19,6 +19,11 @@ class ProjectController extends Controller
     {
        $projects = Projet::where('user_id', auth()->id())->with('user')->latest()->get();
 
+         // Ajouter la progression à chaque projet
+        $projects->each(function ($project) {
+            $project->progress = $this->calculateProgress($project);
+        });
+        
         return ProjectResource::collection($projects);
     }
 
@@ -36,16 +41,16 @@ class ProjectController extends Controller
             ]);
 
             if($project) {
-    
+
                 return new ProjectResource($project->load('user'));
-                
+
             } else {
                 return response()->json([
                     'message' => 'Erreur serveur',
                 ], 207);
             }
         } catch(Exception $e) {
-            
+
             return response()->json([
                 'message' => 'Erreur serveur',
                 'error' => $e->getMessage(),
@@ -56,11 +61,13 @@ class ProjectController extends Controller
 
     /**
      * GET /api/projects/{project}
-        
+
      */
     public function show(Projet $project)
     {
         $this->authorizeProject($project);
+
+        $project->progress = $this->calculateProgress($project);
 
         return new ProjectResource($project);
     }
@@ -89,6 +96,23 @@ class ProjectController extends Controller
         return response()->json([
             'message' => 'Projet supprimé avec succès'
         ]);
+    }
+
+     /**
+     * Calculer la progression du projet
+     */
+    private function calculateProgress(Projet $project)
+    {
+        $tasks = $project->tasks()
+            ->selectRaw("
+                COUNT(*) as total,
+                SUM(CASE WHEN statut = 'Termine' THEN 1 ELSE 0 END) as completed
+            ")
+            ->first();
+
+        return $tasks->total > 0
+            ? round(($tasks->completed / $tasks->total) * 100, 2)
+            : 0;
     }
 
     private function authorizeProject(Projet $project)

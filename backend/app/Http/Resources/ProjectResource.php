@@ -22,6 +22,7 @@ class ProjectResource extends JsonResource
             'couleur' => $this->couleur,
             'createur' => new UserResource($this->whenLoaded('user')),
             'date' => $this->created_at->format('Y-m-d H:i:s'),
+            'progress' => $this->progress
         ];
     }
 }
