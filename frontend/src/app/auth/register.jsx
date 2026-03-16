@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link} from "react-router-dom";
 import InputField from "../../components/inputField.jsx"
 import { useTheme } from "../useTheme";
+import { useForm } from "react-hook-form"
 import "../../styles/auth.css";
 
 const IconUser = () => (
@@ -26,74 +27,26 @@ export default function Register() {
 
   const navigate = useNavigate();
   const { isDark, isMounted } = useTheme();
-  const [name,     setName]     = useState("");
-  const [email,    setEmail]    = useState("");
-  const [password, setPassword] = useState("");
-  const [confirm,  setConfirm]  = useState("");
-  const [showPw,   setShowPw]   = useState(false);
-  const [loading,  setLoading]  = useState(false);
-  const [err,      setErr]      = useState("");
-  const [fieldErrors, setFieldErrors] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirm: ""
-  });
 
-  const validateEmail = (email) => {
-    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-    const yahooRegex = /^[a-zA-Z0-9._%+-]+@yahoo\.com$/;
-    return gmailRegex.test(email) || yahooRegex.test(email);
-  };
+  const [showPw, setShowPw] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const submit = () => {
-    // Reset field errors
-    setFieldErrors({ name: "", email: "", password: "", confirm: "" });
-    setErr("");
-    
-    let hasError = false;
-    const newErrors = { name: "", email: "", password: "", confirm: "" };
-    
-    // Validate name
-    if (!name) {
-      newErrors.name = "Veuillez remplir votre nom complet.";
-      hasError = true;
+
+  const { register, watch, handleSubmit, formState: { errors } } = useForm()
+  // watch sert à vérifier le mot de passe pour la confirmation.
+  const password = watch("password");
+
+  const onSubmit = async(data) => {
+
+    try {
+
+        console.log(data)
+
+    } catch (error) {
+      
+      console.log(error)
     }
-    
-    // Validate email
-    if (!email) {
-      newErrors.email = "Veuillez remplir votre adresse email.";
-      hasError = true;
-    } else if (!validateEmail(email)) {
-      newErrors.email = "Seules les adresses Gmail et Yahoo sont acceptées.";
-      hasError = true;
-    }
-    
-    // Validate password
-    if (!password) {
-      newErrors.password = "Veuillez remplir votre mot de passe.";
-      hasError = true;
-    } else if (password.length < 6) {
-      newErrors.password = "Le mot de passe doit faire au moins 6 caractères.";
-      hasError = true;
-    }
-    
-    // Validate confirm password
-    if (!confirm) {
-      newErrors.confirm = "Veuillez confirmer votre mot de passe.";
-      hasError = true;
-    } else if (password !== confirm) {
-      newErrors.confirm = "Les mots de passe ne correspondent pas.";
-      hasError = true;
-    }
-    
-    setFieldErrors(newErrors);
-    
-    if (!hasError) {
-      setLoading(true);
-      setTimeout(() => { setLoading(false); navigate("/login"); }, 1400);
-    }
-  };
+  }
 
   return (
     <>
@@ -121,11 +74,11 @@ export default function Register() {
         {/* RIGHT PANEL */}
         <div className="right-panel">
           <div className="close-btn-container">
-            <span className="close-link" onClick={() => navigate("/")}>✕</span>
+            <Link to="/" className="close-link">✕</Link>
           </div>
 
-          <div className="form-container">
-            <h1 className={`form-title ${isMounted && !isDark ? 'light' : ''}`}>Créez votre compte</h1>
+          <form className="form-container" onSubmit={handleSubmit(onSubmit)}>
+            <h1 className={`form-title ${isMounted ? 'light' : ''}`}>Créez votre compte</h1>
             <p className="form-description">Remplissez les informations pour créer votre compte.</p>
 
             <InputField
@@ -134,10 +87,19 @@ export default function Register() {
               id="name"
               placeholder="Jean Dupont"
               icon={<IconUser />}
-              value={name}
-              onChange={setName}
-              onEnter={submit} 
-              error={fieldErrors.name}
+              error={errors.name?.message}
+              register={register}
+              condition={{
+                required: "Le nom est obligatoire",
+                minLength: {
+                  value: 2,
+                  message: "Minimum 2 caractères"
+                },
+                maxLength: {
+                  value: 50,
+                  message: "Maximum 50 caractères"
+                }
+              }}
             />
             <InputField
               label="Adresse email"
@@ -145,43 +107,62 @@ export default function Register() {
               id="email"
               placeholder="jean@exemple.com"
               icon={<IconMail />}
-              value={email}
-              onChange={setEmail}
-              onEnter={submit}
-              error={fieldErrors.email}
+              error={errors.email?.message}
+              register={register}
+              condition={{
+                required: "Email obligatoire",
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "Email invalide"
+                }
+              }}
             />
             <InputField
               label="Mot de passe"
               inputType="password"
               id="password"
               placeholder="Au moins 6 caractères"
-              icon={<IconLock />} value={password}
-              onChange={setPassword} onEnter={submit}
+              icon={<IconLock />} 
+              value={password}
               showToggle
               showPw={showPw}
               onTogglePw={() => setShowPw(v => !v)}
-              error={fieldErrors.password}
+              error={errors.password?.message}
+              register={register}
+              condition={{
+                required: "Mot de passe obligatoire",
+                minLength: {
+                  value: 6,
+                  message: "Minimum 6 caractères"
+                },
+                pattern: {
+                  value: /^(?=.*[A-Za-z])(?=.*\d).+$/,
+                  message: "Doit contenir lettres et chiffres"
+                }
+              }}
             />
             <InputField
               label="Confirmer le mot de passe" 
-              inputType="password" id="confirm"  
+              inputType="password" 
+              id="confirm"  
               placeholder="Répétez le mot de passe"  
               icon={<IconLock />} 
-              value={confirm}
-              onChange={setConfirm}
-              onEnter={submit} 
               showToggle
               showPw={showPw} 
               onTogglePw={() => setShowPw(v => !v)}
-              error={fieldErrors.confirm}
+              error={errors.confirm?.message}
+              register={register}
+              condition={{
+                required: "Confirmation obligatoire",
+                validate: value =>
+                  value === password || "Les mots de passe ne correspondent pas"
+              }}
             />
-
+            {/* 
             {err && (
               <div className="error-message">⚠ {err}</div>
-            )}
-
-            <button 
-              onClick={submit}
+            )} */}
+            <button type="submit"
               className="submit-btn"
               disabled={loading}
             >
@@ -192,11 +173,15 @@ export default function Register() {
 
             <div className="signup-text-container">
               <p className="signup-text">
-                Déjà un compte ?{" "}
-                <span className="auth-link" onClick={() => navigate("/auth/login")}>Se connecter</span>
+                Déjà un compte ?
+                <Link className="auth-link" 
+                  to="/auth/login"
+                >
+                  Se connecter
+                </Link>
               </p>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </>

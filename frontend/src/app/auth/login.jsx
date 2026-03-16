@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import InputField from "../../components/inputField.jsx"
 import { useTheme } from "../useTheme";
+import { useForm } from "react-hook-form"
 import "../../styles/auth.css";
 
 const IconMail = () => (
@@ -20,55 +21,19 @@ export default function Login() {
 
   const navigate = useNavigate();
   const { isDark, isMounted } = useTheme();
-  const [email,    setEmail]    = useState("");
-  const [password, setPassword] = useState("");
   const [showPw,   setShowPw]   = useState(false);
   const [loading,  setLoading]  = useState(false);
-  const [err,      setErr]      = useState("");
-  const [fieldErrors, setFieldErrors] = useState({
-    email: "",
-    password: ""
-  });
 
-  const validateEmail = (email) => {
-    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-    const yahooRegex = /^[a-zA-Z0-9._%+-]+@yahoo\.com$/;
-    return gmailRegex.test(email) || yahooRegex.test(email);
-  };
+  const { register, handleSubmit, formState: { errors } } = useForm()
 
-  const submit = () => {
-    // Reset field errors
-    setFieldErrors({ email: "", password: "" });
-    setErr("");
-    
-    let hasError = false;
-    const newErrors = { email: "", password: "" };
-    
-    // Validate email
-    if (!email) {
-      newErrors.email = "Veuillez remplir votre adresse email.";
-      hasError = true;
-    } else if (!validateEmail(email)) {
-      newErrors.email = "Seules les adresses Gmail et Yahoo sont acceptées.";
-      hasError = true;
+  const onSubmit = async(data) =>  {
+
+    try {
+      console.log(data)
+    } catch (error) {
+      console.log(error)
     }
-    
-    // Validate password
-    if (!password) {
-      newErrors.password = "Veuillez remplir votre mot de passe.";
-      hasError = true;
-    } else if (password.length < 6) {
-      newErrors.password = "Le mot de passe doit faire au moins 6 caractères.";
-      hasError = true;
-    }
-    
-    setFieldErrors(newErrors);
-    
-    if (!hasError) {
-      setLoading(true);
-      setTimeout(() => { setLoading(false); /* navigate("/dashboard") */ }, 1400);
-    }
-  };
+  }
 
   return (
     <>
@@ -99,7 +64,7 @@ export default function Login() {
             <span className="close-link" onClick={() => navigate("/")}>✕</span>
           </div>
 
-          <div className="form-container">
+          <form className="form-container" onSubmit={handleSubmit(onSubmit)}>
             <h1 className={`form-title ${isMounted && !isDark ? 'light' : ''}`}>Ravi de vous revoir</h1>
             <p className="form-description">Connectez-vous pour accéder à votre tableau de bord.</p>
 
@@ -108,11 +73,17 @@ export default function Login() {
               inputType="email"
               id="email"
               placeholder="jean@exemple.com" 
-              icon={<IconMail />} 
-              value={email}
-              onChange={setEmail}
-              onEnter={submit}
-              error={fieldErrors.email}
+              icon={<IconMail />}
+              icon={<IconMail />}
+              error={errors.email?.message}
+              register={register}
+              condition={{
+                required: "Email obligatoire",
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "Email invalide"
+                }
+              }}
             />
             <InputField 
               label="Mot de passe"
@@ -120,21 +91,27 @@ export default function Login() {
               id="password" 
               placeholder="••••••••"
               icon={<IconLock />} 
-              value={password} 
-              onChange={setPassword}
-              onEnter={submit}
               showToggle
               showPw={showPw}
               onTogglePw={() => setShowPw(v => !v)}
-              error={fieldErrors.password}
+              error={errors.password?.message}
+              register={register}
+              condition={{
+                required: "Mot de passe obligatoire",
+                minLength: {
+                  value: 6,
+                  message: "Minimum 6 caractères"
+                },
+                pattern: {
+                  value: /^(?=.*[A-Za-z])(?=.*\d).+$/,
+                  message: "Doit contenir lettres et chiffres"
+                }
+              }}
             />
-
-            {err && (
+            {/* {err && (
               <div className="error-message">⚠ {err}</div>
-            )}
-
-            <button 
-              onClick={submit}
+            )} */}
+            <button type="submit"
               className="submit-btn"
               disabled={loading}
             >
@@ -145,11 +122,16 @@ export default function Login() {
 
             <div className="signup-text-container">
               <p className="signup-text">
-                Pas encore de compte ?{" "}
-                <span className="auth-link" onClick={() => navigate("/auth/register")}>Inscrivez-vous</span>
+                Pas encore de compte ?
+                <Link 
+                  className="auth-link" 
+                  to="/auth/register"
+                >
+                    Inscrivez-vous
+                  </Link>
               </p>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </>

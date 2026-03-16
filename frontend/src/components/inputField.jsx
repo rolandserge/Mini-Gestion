@@ -35,7 +35,7 @@ const G = `
 `;
 
 
-export default function InputField({id, showPw, className, inputType, value, showToggle, placeholder, onTogglePw, label, icon, onChange, onEnter, error}) {
+export default function InputField({id, condition, register, showPw, className, inputType, showToggle, placeholder, onTogglePw, label, icon, error}) {
 
     return (
         <>
@@ -49,9 +49,7 @@ export default function InputField({id, showPw, className, inputType, value, sho
                         name={id}
                         className={`login-input ${error ? 'error' : ''}`}
                         type={showToggle ? (showPw ? "text" : "password") : inputType}
-                        value={value}
-                        onChange={e => onChange(e.target.value)}
-                        onKeyDown={e => e.key === "Enter" && onEnter()}
+                        {...register(id , condition )}
                         placeholder={placeholder}
                         autoComplete={id === "email" ? "email" : "current-password"}
                     />
