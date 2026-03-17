@@ -17,7 +17,8 @@ class ProjectController extends Controller
      */
     public function index()
     {
-       $projects = Projet::where('user_id', auth()->id())->with('user')->latest()->get();
+    // $projects = Projet::where('user_id', auth()->id())->with(['user', 'tasks'])->latest()->get();
+       $projects = Projet::with(['user', 'tasks'])->latest()->get();
 
          // Ajouter la progression à chaque projet
         $projects->each(function ($project) {
@@ -58,18 +59,32 @@ class ProjectController extends Controller
             ], 500);
         }
     }
-
     /**
      * GET /api/projects/{project}
-
      */
     public function show(Projet $project)
     {
-        $this->authorizeProject($project);
 
         $project->progress = $this->calculateProgress($project);
 
         return new ProjectResource($project);
+
+        try {
+            //code...
+                $this->authorizeProject($project);
+        
+                return new ProjectResource($project);
+                // return response()->json([
+                //     "message" => "Le projet est introuvable dans la base de donnée"
+                // ], 403);
+
+        } catch (Exception $e) {
+            //throw $th;
+            return response()->json([
+                "message" => $e->getMessage(),
+                "errors" => $e
+            ], 300);
+        }
     }
 
     /**
@@ -77,11 +92,24 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Projet $project)
     {
-        $this->authorizeProject($project);
+        try {
 
-        $project->update($request->validated());
+            $this->authorizeProject($project);
+    
+            $project->update($request->validated());
+    
+            return response()->json([
+                "message" => "le projet a été modifié avec succès",
+                "projet" => new ProjectResource($project),
+            ], 201);
 
-        return new ProjectResource($project);
+        } catch(Exception $e) {
+
+            return response()->json([
+                "message" => $e->getMessage(),
+                "errors" => $e
+            ], 300);
+        };
     }
 
     /**
@@ -89,13 +117,21 @@ class ProjectController extends Controller
      */
     public function destroy(Projet $project)
     {
-         $this->authorizeProject($project);
+        try {
+            $this->authorizeProject($project);
+    
+            $project->delete();
+    
+            return response()->json([
+                'message' => 'Projet supprimé avec succès',
+            ], 201);
+        } catch(Exception $e) {
 
-        $project->delete();
-
-        return response()->json([
-            'message' => 'Projet supprimé avec succès'
-        ]);
+            return response()->json([
+                "message" => $e->getMessage(),
+                "errors" => $e
+            ], 300);
+        };
     }
 
      /**

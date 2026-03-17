@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use Exception;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -23,7 +23,7 @@ class AuthController extends Controller
          $token = JWTAuth::fromUser($user);
 
          return response()->json([
-            'message' => 'User successfully registered',
+            'message' => 'Utilisateur enregistré avec succès',
             'user' => $user,
             'access_token' => $token,
             'token_type' => 'bearer',
@@ -40,11 +40,16 @@ class AuthController extends Controller
 
         if (!$token = auth('api')->attempt($credentials)) {
             return response()->json([
-                'message' => 'Unauthorized'
+                'message' => 'Non autorisé'
             ], 401);
         }
 
-        return $this->respondWithToken($token);
+        return  response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth('api')->factory()->getTTL() * 60,
+            'user' => auth('api')->user()
+        ]);
     }
 
     public function refresh()
@@ -79,19 +84,7 @@ class AuthController extends Controller
         auth('api')->logout();
 
         return response()->json([
-            'message' => 'Successfully logged out'
+            'message' => 'Déconnexion réussie'
         ]);
     }
-
- 
-    protected function respondWithToken($token) {
-
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60,
-            'user' => auth('api')->user()
-        ]);
-    }
-
 }

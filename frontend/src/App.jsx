@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useAuth } from "./store/authStore.js";
 
 function App() {
+  
   useEffect(() => {
     const { token, checkAuth } = useAuth.getState();
     if (token) {

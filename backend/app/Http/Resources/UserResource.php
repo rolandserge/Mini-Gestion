@@ -20,9 +20,9 @@ class UserResource extends JsonResource
             'nom' => $this->name,
             'email' => $this->email,
             // Relations (chargées seulement si with())
-            'projects' => [] || ProjectResource::collection($this->whenLoaded('projets')),
             'creationHeure' => $this->created_at?->toISOString(),
             'modificationHeure' => $this->updated_at?->toISOString(),
+            'projets' => ProjectResource::collection($this->whenLoaded('projets')),
         ];
     }
 }

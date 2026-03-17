@@ -22,7 +22,7 @@ class UpdateProjectRequest extends FormRequest
     public function rules(): array
     {
        return [
-            'nom' => ['sometimes', 'string', 'max:255'],
+            'nom' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'couleur' => ['nullable', 'string', 'max:20'],
         ];
@@ -30,6 +30,7 @@ class UpdateProjectRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'nom.required' => 'le champs du nom est requis',
             'nom.string' => 'Le nom doit être une chaîne valide.',
             'nom.max' => 'Le nom ne peut pas dépasser 255 caractères.',
             'description.string' => 'La description doit être une chaîne valide.',

@@ -61,7 +61,7 @@ export default function Login() {
         {/* RIGHT PANEL */}
         <div className="right-panel">
           <div className="close-btn-container">
-            <span className="close-link" onClick={() => navigate("/")}>✕</span>
+            <Link className="close-link" to="/">✕</Link>
           </div>
 
           <form className="form-container" onSubmit={handleSubmit(onSubmit)}>
@@ -73,7 +73,6 @@ export default function Login() {
               inputType="email"
               id="email"
               placeholder="jean@exemple.com" 
-              icon={<IconMail />}
               icon={<IconMail />}
               error={errors.email?.message}
               register={register}

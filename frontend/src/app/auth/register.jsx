@@ -78,7 +78,7 @@ export default function Register() {
           </div>
 
           <form className="form-container" onSubmit={handleSubmit(onSubmit)}>
-            <h1 className={`form-title ${isMounted ? 'light' : ''}`}>Créez votre compte</h1>
+            <h1 className={`form-title ${isMounted && !isDart ? 'light' : ''}`}>Créez votre compte</h1>
             <p className="form-description">Remplissez les informations pour créer votre compte.</p>
 
             <InputField
