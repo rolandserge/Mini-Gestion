@@ -23,12 +23,12 @@ class TacheController extends Controller
         $query = Tache::with(['projet', 'assignees']);
 
         // Filtres globaux
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
+        if ($request->filled('statut')) {
+            $query->where('statut', $request->status);
         }
 
-        if ($request->filled('priority')) {
-            $query->where('priority', $request->priority);
+        if ($request->filled('priorite')) {
+            $query->where('priorite', $request->priority);
         }
 
         $tasks = $query->latest()->get();
@@ -41,18 +41,10 @@ class TacheController extends Controller
      */
     public function show(Tache $task)
     {
-        if($task) {
-            // avoir le projet a lequel la tache est appartient ainsi que les utilisateurs
-
-            $task->load(['projet', 'assignees']);
+        // avoir le projet a lequel la tache est appartient ainsi que les utilisateurs
+        $task->load(['projet', 'assignees']);
             
-            return new TaskResource($task);
-
-        } else {
-            return response()->json([
-                "message" => "La tache est introuvable veillez charger une bonne tache"
-            ]);
-        }
+        return new TaskResource($task);
 
     }
     /**
@@ -70,11 +62,7 @@ class TacheController extends Controller
 
         } catch(Exception $e) {
 
-            return response()->json([
-                'message' => 'Erreur serveur',
-                'error' => $e->getMessage(),
-                "ereur_tous" => $e
-            ], 500);
+            return $this->responseWithErrorApi($e);
         }
     }
     /**
@@ -93,18 +81,14 @@ class TacheController extends Controller
 
         } catch(Exception $e) {
 
-            return response()->json([
-                'message' => 'Erreur serveur',
-                'error' => $e->getMessage(),
-                "ereur_tous" => $e
-            ], 500);
+            return $this->responseWithErrorApi($e);
         }
     }
     public function updateStatus(Request $request, Tache $task)
     {
         try {
             // vérifier que l'utilisateur est propriétaire du projet
-            $this->authorizeProjectOwner($task->project);
+            $this->authorizeProjectOwner($task->projet);
             // validation
             $request->validate([
                 'statut' => 'required|in:A faire,En cours,Termine'
@@ -118,11 +102,7 @@ class TacheController extends Controller
 
         } catch(Exception $e) {
 
-            return response()->json([
-                'message' => 'Erreur serveur',
-                'error' => $e->getMessage(),
-                "ereur_tous" => $e
-            ], 500);
+            return $this->responseWithErrorApi($e);
         } 
     }
     /**
@@ -133,8 +113,6 @@ class TacheController extends Controller
         try {
             $taskLoader = $task->load("projet");
 
-            // return response()->json($taskLoader->projet);
-
             $this->authorizeProjectOwner($taskLoader->projet);
     
             $task->delete();
@@ -144,11 +122,7 @@ class TacheController extends Controller
             ]);
         } catch(Exception $e) {
 
-            return response()->json([
-                'message' => 'Erreur serveur',
-                'error' => $e->getMessage(),
-                "ereur_tous" => $e
-            ], 500);
+           return $this->responseWithErrorApi($e);
         }
     }
     /**
@@ -169,11 +143,7 @@ class TacheController extends Controller
             ]);
         } catch (Exception $e) {
             //throw $th;
-            return response()->json([
-                'message' => 'Erreur serveur',
-                'error' => $e->getMessage(),
-                "ereur_tous" => $e
-            ], 500);
+           return $this->responseWithErrorApi($e);
         }
     }
     /**
@@ -195,22 +165,23 @@ class TacheController extends Controller
 
         } catch (Exception $e) {
             //throw $th;
-            return response()->json([
-                'message' => 'Erreur serveur',
-                'error' => $e->getMessage(),
-                "ereur_tous" => $e
-            ], 500);
+            return $this->responseWithErrorApi($e);
         }
     }
 
     private function authorizeProjectOwner(Projet $project) {
 
         if (auth()->id() !== $project->user_id) {
-            
-            return response()->json([
-                'message' => 'Desolé, vous n\'avez pas l\'autorisation pour effectuer cette requête',
-                'status' => 403,
-            ], 403);
+
+            abort(403, "Desolé, vous n\'avez pas l\'autorisation pour effectuer cette requête");
         }
+    }
+
+    private function responseWithErrorApi($e) {
+
+        return response()->json([
+            'message' => $e->getMessage(),
+            'erreur' => "erreur survenu",
+        ], 500);
     }
 }

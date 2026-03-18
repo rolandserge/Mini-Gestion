@@ -41,22 +41,11 @@ class ProjectController extends Controller
                 'user_id' => Auth::id(),
             ]);
 
-            if($project) {
+            return new ProjectResource($project->load('user'));
 
-                return new ProjectResource($project->load('user'));
-
-            } else {
-                return response()->json([
-                    'message' => 'Erreur serveur',
-                ], 207);
-            }
         } catch(Exception $e) {
 
-            return response()->json([
-                'message' => 'Erreur serveur',
-                'error' => $e->getMessage(),
-                "ereur_tous" => $e
-            ], 500);
+            return $this->responseWithErrorApi($e);
         }
     }
     /**
@@ -65,28 +54,18 @@ class ProjectController extends Controller
     public function show(Projet $project)
     {
 
-        $project->progress = $this->calculateProgress($project);
-
-        return new ProjectResource($project);
-
         try {
-            //code...
-                $this->authorizeProject($project);
+            $project->progress = $this->calculateProgress($project);
+
+            $this->authorizeProject($project);
         
-                return new ProjectResource($project);
-                // return response()->json([
-                //     "message" => "Le projet est introuvable dans la base de donnée"
-                // ], 403);
+            return new ProjectResource($project);
 
         } catch (Exception $e) {
-            //throw $th;
-            return response()->json([
-                "message" => $e->getMessage(),
-                "errors" => $e
-            ], 300);
+
+            return $this->responseWithErrorApi($e);
         }
     }
-
     /**
      * PUT /api/projects/{project}
      */
@@ -101,14 +80,11 @@ class ProjectController extends Controller
             return response()->json([
                 "message" => "le projet a été modifié avec succès",
                 "projet" => new ProjectResource($project),
-            ], 201);
+            ], 200);
 
         } catch(Exception $e) {
 
-            return response()->json([
-                "message" => $e->getMessage(),
-                "errors" => $e
-            ], 300);
+            return $this->responseWithErrorApi($e);
         };
     }
 
@@ -124,16 +100,12 @@ class ProjectController extends Controller
     
             return response()->json([
                 'message' => 'Projet supprimé avec succès',
-            ], 201);
+            ], 200);
         } catch(Exception $e) {
 
-            return response()->json([
-                "message" => $e->getMessage(),
-                "errors" => $e
-            ], 300);
+            return $this->responseWithErrorApi($e);
         };
     }
-
      /**
      * Calculer la progression du projet
      */
@@ -154,7 +126,15 @@ class ProjectController extends Controller
     private function authorizeProject(Projet $project)
     {
         if ($project->user_id !== auth()->id()) {
-            abort(403, 'Unauthorized');
+            abort(403, 'Vous n\'êtes pas autorisz a effectuer cette opération');
         }
+    }
+
+    private function responseWithErrorApi($e) {
+
+        return response()->json([
+            'message' => $e->getMessage(),
+            'erreur' => "Erreur survenue",
+        ], 500);
     }
 }

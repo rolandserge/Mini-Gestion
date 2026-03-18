@@ -40,11 +40,11 @@ class AuthController extends Controller
 
         if (!$token = auth('api')->attempt($credentials)) {
             return response()->json([
-                'message' => 'Non autorisé'
-            ], 401);
+                'message' => 'Email ou mot de passe incorrect'
+            ], 422);
         }
 
-        return  response()->json([
+        return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth('api')->factory()->getTTL() * 60,
@@ -67,7 +67,7 @@ class AuthController extends Controller
         } catch (Exception $e) {
             // Si le token est trop vieux (Refresh TTL dépassé) ou invalide
             return response()->json([
-                'error' => 'Impossible de rafraîchir le token'
+                'message' => 'Impossible de rafraîchir le token'
                 ], 401);
         }
     }

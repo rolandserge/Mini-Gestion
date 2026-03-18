@@ -22,9 +22,9 @@ class ProjectResource extends JsonResource
             'description' => $this->description,
             'couleur' => $this->couleur,
             'date' => $this->created_at->format('Y-m-d H:i:s'),
-            'progress' => $this->progress
+            'progress' => $this->progress,
             'createur' => new UserResource($this->whenLoaded('user')),
-            'taches' => TaskResource::collection($this->whenLoaded("tasks")),
+            'taches' => TaskResource::collection($this->whenLoaded("tasks"))
         ];
     }
 }

@@ -3,6 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import InputField from "../../components/inputField.jsx"
 import { useTheme } from "../useTheme";
 import { useForm } from "react-hook-form"
+import { toast } from 'sonner';
+import { useAuth }  from "../../store/authStore.js";
 import "../../styles/auth.css";
 
 const IconMail = () => (
@@ -22,14 +24,20 @@ export default function Login() {
   const navigate = useNavigate();
   const { isDark, isMounted } = useTheme();
   const [showPw,   setShowPw]   = useState(false);
-  const [loading,  setLoading]  = useState(false);
 
-  const { register, handleSubmit, formState: { errors } } = useForm()
+  const { loginAction, loading, error } = useAuth()
+
+  const { register, handleSubmit, formState: { errors, isValid } } = useForm({ mode: "onChange" })
 
   const onSubmit = async(data) =>  {
 
     try {
-      console.log(data)
+      const res = await loginAction(data)
+      
+      if(res) {
+        toast.success("connexion réussi")
+        navigate("/dashbord")
+      }
     } catch (error) {
       console.log(error)
     }
@@ -107,15 +115,18 @@ export default function Login() {
                 }
               }}
             />
-            {/* {err && (
-              <div className="error-message">⚠ {err}</div>
-            )} */}
+            {error && (
+              <div className="error-message">⚠ {error}</div>
+            )}
             <button type="submit"
               className="submit-btn"
-              disabled={loading}
+              disabled={loading || !isValid}
             >
               {loading
-                ? <><div className="loading-spinner" />Connexion...</>
+                ? <>
+                    <div className="loading-spinner" />
+                    Connexion...
+                  </>
                 : "Accéder au tableau de bord →"}
             </button>
 

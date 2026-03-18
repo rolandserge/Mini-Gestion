@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from "zustand/middleware"
-import { login, logout, me, register } from '../services/authServices'
+import { login as loginApi, logout as logoutApi, me as meApi, register as registerApi} from '../services/authServices'
 
 export const useAuth = create(
 
@@ -21,12 +21,12 @@ export const useAuth = create(
                set({ loading: true, error: null });
 
                try {
-                    const res = await register(formData)
+                    const res = await registerApi(formData)
 
-                    const { access_token, user } = res.data; 
+                    const { access_token, user } = res || {}; 
 
                     set({ 
-                         user, 
+                         user,
                          token: access_token, 
                          isAuthenticated: true, 
                          loading: false 
@@ -34,9 +34,8 @@ export const useAuth = create(
 
                     return true;
                } catch (error) {
-                    console.log(error)
                     set({ 
-                         error: error.response?.data?.error || "Erreur de connexion", 
+                         error: error?.response?.data?.message || error?.response?.data?.errors, 
                          loading: false 
                     });
 
@@ -49,9 +48,9 @@ export const useAuth = create(
                set({ loading: true, error: null });
 
                try {
-                    const res = await login(formData)
+                    const res = await loginApi(formData)
                     
-                    const { access_token, user } = res.data; 
+                    const { access_token, user } = res; 
 
                     set({ 
                          user, 
@@ -62,28 +61,35 @@ export const useAuth = create(
 
                     return true;
                } catch (error) {
-                    console.log(error)
-                    set({ error: error.response?.data?.error || "Erreur de connexion", loading: false });
+
+                    set({ 
+                         error: error.response?.data?.message || "Erreur de connexion", 
+                         loading: false 
+                    });
 
                     return false;
                }
           },
 
-          logout: async () => {
+          logoutAction: async () => {
                try {
                     // Appel API pour blacklister le token côté Laravel
-                    await logout(); 
+                    await logoutApi(); 
 
                     return true
 
                } catch (error) {
-                    set({ error: error?.response?.data?.error})
+
+                    set({ error: error?.response?.data?.message})
+
+                    return false
                } finally {
                     set({ 
                          user: null, 
                          token: null, 
                          isAuthenticated: false,
-                         error: null
+                         error: null,
+                         loading: false
                     });
 
                } 
@@ -96,10 +102,10 @@ export const useAuth = create(
 
                try {
                     // Route Laravel qui renvoie l'user connecté
-                    const res = await me(); 
-                    console.log(res.data)
+                    const res = await meApi(); 
+
                     set({ 
-                         user: res.data, 
+                         user: res, 
                          isAuthenticated: true,
                          loading: false
                     });

@@ -2,7 +2,9 @@ import { useState } from "react";
 import { useNavigate, Link} from "react-router-dom";
 import InputField from "../../components/inputField.jsx"
 import { useTheme } from "../useTheme";
-import { useForm } from "react-hook-form"
+import { useAuth }  from "../../store/authStore.js";
+import { useForm, useWatch } from "react-hook-form"
+import { toast } from 'sonner';
 import "../../styles/auth.css";
 
 const IconUser = () => (
@@ -29,21 +31,29 @@ export default function Register() {
   const { isDark, isMounted } = useTheme();
 
   const [showPw, setShowPw] = useState(false);
-  const [loading, setLoading] = useState(false);
 
+  const { registerAction, loading, error } = useAuth()
 
-  const { register, watch, handleSubmit, formState: { errors } } = useForm()
+  const { register, control, handleSubmit, formState: { errors, isValid } } = useForm({ mode: "onChange" })
   // watch sert à vérifier le mot de passe pour la confirmation.
-  const password = watch("password");
+  const password = useWatch({
+    control,
+    name: "password", // Le nom du champ à surveiller
+  });
 
   const onSubmit = async(data) => {
 
     try {
+        
+        const res = await registerAction(data)
 
-        console.log(data)
+        if(res) {
+          toast.success("Inscription réussie")
+          navigate("/dashbord")
+        }
 
     } catch (error) {
-      
+      toast.error("Erreur lors de l'inscription");
       console.log(error)
     }
   }
@@ -78,7 +88,7 @@ export default function Register() {
           </div>
 
           <form className="form-container" onSubmit={handleSubmit(onSubmit)}>
-            <h1 className={`form-title ${isMounted && !isDart ? 'light' : ''}`}>Créez votre compte</h1>
+            <h1 className={`form-title ${isMounted && !isDark ? 'light' : ''}`}>Créez votre compte</h1>
             <p className="form-description">Remplissez les informations pour créer votre compte.</p>
 
             <InputField
@@ -123,7 +133,6 @@ export default function Register() {
               id="password"
               placeholder="Au moins 6 caractères"
               icon={<IconLock />} 
-              value={password}
               showToggle
               showPw={showPw}
               onTogglePw={() => setShowPw(v => !v)}
@@ -158,16 +167,19 @@ export default function Register() {
                   value === password || "Les mots de passe ne correspondent pas"
               }}
             />
-            {/* 
-            {err && (
-              <div className="error-message">⚠ {err}</div>
-            )} */}
+            
+            {error && (
+              <div className="error-message">⚠ {error}</div>
+            )} 
             <button type="submit"
               className="submit-btn"
-              disabled={loading}
+              disabled={loading || !isValid}
             >
               {loading
-                ? <><div className="loading-spinner" />Création du compte...</>
+                ? <>
+                    <div className="loading-spinner" />
+                    Création du compte...
+                  </>
                 : "Créer mon compte →"}
             </button>
 
