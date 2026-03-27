@@ -5,7 +5,7 @@ import { useTheme } from "../useTheme";
 import { useAuth }  from "../../store/authStore.js";
 import { useForm, useWatch } from "react-hook-form"
 import { toast } from 'sonner';
-import "../../styles/auth.css";
+
 
 const IconUser = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">

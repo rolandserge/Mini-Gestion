@@ -1,0 +1,791 @@
+/* Login Page Styles */
+@use "sass:meta";
+// Variables
+$bg-dark: #05080f;
+$bg-light: #f4f5fb;
+$primary-glow: rgba(99, 102, 241, 0.15);
+$secondary-glow: rgba(139, 92, 246, 0.11);
+$border-color: rgba(99, 102, 241, 0.08);
+
+.login-container {
+  width: 100vw;
+  height: 100vh;
+  background: $bg-dark;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+
+  &.light {
+    background: $bg-light;
+  }
+
+  .orb {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+
+    &-1 {
+      position: absolute;
+      top: -8%;
+      left: -4%;
+      width: 580px;
+      height: 580px;
+      border-radius: 50%;
+      background: radial-gradient(circle, $primary-glow 0%, transparent 70%);
+      animation: orb 12s ease-in-out infinite;
+    }
+
+    &-2 {
+      position: absolute;
+      bottom: -12%;
+      right: -4%;
+      width: 650px;
+      height: 650px;
+      border-radius: 50%;
+      background: radial-gradient(circle, $secondary-glow 0%, transparent 70%);
+      animation: orb 16s ease-in-out infinite 3s;
+    }
+  }
+}
+
+.left-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 60px;
+  position: relative;
+  border-right: 1px solid $border-color;
+  z-index: 1;
+
+  .floating-orb-1 {
+    position: absolute;
+    top: 18%;
+    left: 8%;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%);
+    animation: floatY 8s ease-in-out infinite;
+  }
+
+  .floating-orb-2 {
+    position: absolute;
+    bottom: 14%;
+    right: 12%;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.16) 0%, transparent 70%);
+    animation: floatY 11s ease-in-out infinite 2s;
+  }
+
+  .left-content {
+    position: relative;
+    z-index: 1;
+    text-align: left;
+    max-width: 400px;
+    margin-left: 40px;
+  }
+
+  .logo-container {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 40px;
+  }
+}
+
+
+// Variables de couleurs réutilisables
+$primary-gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+$danger-gradient: linear-gradient(135deg, #ef4444, #dc2626);
+$danger-hover-gradient: linear-gradient(135deg, #dc2626, #b91c1c);
+$text-dark: #0f172a;
+$text-muted: #475569;
+$font-syne: 'Syne', sans-serif;
+
+.logo {
+  width: 68px;
+  height: 68px;
+  border-radius: 22px;
+  background: $primary-gradient;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $font-syne;
+  font-weight: 900;
+  font-size: 32px;
+  color: white;
+  box-shadow: 0 8px 40px rgba(99, 102, 241, 0.5);
+  animation: glow 3s ease-in-out infinite;
+}
+
+.left-title {
+  font-family: $font-syne;
+  font-weight: 800;
+  font-size: 38px;
+  color: white;
+  letter-spacing: -1.5px;
+  line-height: 1.12;
+  margin-bottom: 16px;
+  text-align: left;
+
+  &.light {
+    color: $text-dark;
+  }
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #6366f1, #a78bfa, #38bdf8);
+  background-size: 200%;
+  animation: gradShift 4s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.left-description {
+  color: $text-muted;
+  font-size: 14px;
+  line-height: 1.75;
+  text-align: left;
+}
+
+.right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 60px 50px;
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+  margin-left: 80px;
+
+  .close-btn-container {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    z-index: 10;
+  }
+}
+
+// Style commun pour les boutons de fermeture (link et button)
+.close-link, .close-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: $danger-gradient;
+  color: white;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.28);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+
+  &:hover {
+    transform: scale(1.14);
+    box-shadow: 0 0 22px rgba(239, 68, 68, 0.5);
+    @if meta.variable-exists(danger-hover-gradient) { 
+      background: $danger-hover-gradient; 
+    }
+  }
+
+  &:active {
+    transform: scale(1.05);
+    box-shadow: 0 2px 10px rgba(239, 68, 68, 0.3);
+  }
+}
+
+.form-container {
+  animation: slideUp 0.5s ease;
+
+  .form-title {
+    font-family: $font-syne;
+    font-weight: 800;
+    font-size: 26px;
+    color: white;
+    letter-spacing: -0.8px;
+    margin-bottom: 6px;
+    text-align: left;
+
+    &.light {
+      color: $text-dark;
+    }
+  }
+
+  .form-description {
+    color: $text-muted;
+    font-size: 14px;
+    margin-bottom: 32px;
+    text-align: left;
+  }
+}
+
+.auth-link {
+  color: #6366f1;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+  font-family: $font-syne;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  display: inline-block;
+  padding: 2px 0;
+  margin-left: 8px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &:hover::before {
+    width: 100%;
+  }
+}
+
+
+// Variables (en complément des précédentes)
+$error-bg: rgba(248, 113, 113, 0.09);
+$error-border: rgba(248, 113, 113, 0.22);
+$error-text: #f87171;
+
+// Suite du nesting pour .auth-link (à placer dans le bloc précédent)
+.auth-link {
+  // ... (styles de base déjà fournis)
+
+  &:hover {
+    color: #8b5cf6;
+    transform: translateY(-1px);
+
+    &::before {
+      width: 100%;
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+    color: #6366f1;
+  }
+}
+
+.signup-text-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 8px;
+  width: 100%;
+
+  .signup-text {
+    text-align: center;
+    color: $text-muted;
+    font-size: 13px;
+    font-family: $font-syne;
+    font-weight: 400;
+    
+    // Variante si besoin d'un alignement différent
+    &.left-aligned {
+      text-align: left;
+      margin-top: 22px;
+    }
+  }
+}
+
+.error-message {
+  background: $error-bg;
+  border: 1px solid $error-border;
+  border-radius: 10px;
+  padding: 11px 15px;
+  margin-bottom: 16px;
+  color: $error-text;
+  font-size: 13px;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 15px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  background: $primary-gradient;
+  color: white;
+  font-family: $font-syne;
+  font-weight: 700;
+  font-size: 15px;
+  box-shadow: 0 8px 28px rgba(99, 102, 241, 0.4);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(99, 102, 241, 0.5);
+  }
+
+  &:disabled {
+    background: rgba(99, 102, 241, 0.35);
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .loading-spinner {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+  }
+}
+
+/* Animations Sass */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 8px 40px rgba(99, 102, 241, 0.5); }
+  50% { box-shadow: 0 8px 55px rgba(99, 102, 241, 0.8); }
+}
+
+@keyframes gradShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+
+// Nouvelles Variables pour cette section
+$gold: #FFD700;
+$gold-light: rgba(255, 215, 0, 0.2);
+$dark-bg: #0A0A0A;
+$dark-gradient: linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 100%);
+
+// Mixin pour le responsive (optionnel mais recommandé)
+@mixin tablet { @media (max-width: 768px) { @content; } }
+@mixin mobile { @media (max-width: 480px) { @content; } }
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.auth-container {
+  display: flex;
+  min-height: 100vh;
+  background: $dark-bg;
+  color: #FFFFFF;
+}
+
+/* Left Section */
+.auth-left {
+  flex: 1.2;
+  background: $dark-gradient;
+  position: relative;
+  overflow: hidden;
+  padding: 3rem;
+  display: flex;
+  align-items: center;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  &-content {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+  }
+}
+
+.logo-section {
+  margin-bottom: 4rem;
+
+  .logo {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: $gold;
+    text-transform: lowercase;
+  }
+}
+
+.hero-section {
+  margin-bottom: 3rem;
+
+  .hero-title {
+    font-size: 3.5rem;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+
+    .highlight {
+      color: $gold;
+      position: relative;
+      display: inline-block;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 5px;
+        left: 0;
+        width: 100%;
+        height: 8px;
+        background: $gold-light;
+        z-index: -1;
+      }
+    }
+  }
+
+  .hero-description {
+    font-size: 1rem;
+    color: #888;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    max-width: 500px;
+  }
+
+  .hero-badges {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+
+    .badge {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      color: $gold;
+      border: 1px solid rgba(255, 215, 0, 0.2);
+    }
+  }
+}
+
+/* Intégration du Responsive (Nesting) */
+.left-panel {
+  @include tablet { padding: 40px 20px; }
+  @include mobile { 
+    border-right: none;
+    border-bottom: 1px solid rgba(99, 102, 241, 0.08);
+    min-height: 40vh;
+  }
+}
+
+.right-panel {
+  @include tablet { 
+    padding: 40px 20px;
+    margin-left: 0;
+  }
+}
+
+.login-container {
+  @include mobile { flex-direction: column; }
+}
+
+/* Animations manquantes */
+@keyframes orb {
+  0%, 100% { transform: scale(1) translate(0, 0); }
+  50% { transform: scale(1.07) translate(12px, -12px); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+
+// Variables spécifiques à la section Auth Right
+$gold: #FFD700;
+$gold-hover: #FFE55C;
+$dark-panel: #0F0F0F;
+$error-red: #ff4444;
+$input-bg: rgba(255, 255, 255, 0.05);
+
+.how-it-works-btn {
+  background: transparent;
+  border: 2px solid $gold;
+  color: $gold;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: $gold;
+    color: #0A0A0A;
+
+    .arrow {
+      transform: translateX(5px);
+    }
+  }
+
+  .arrow {
+    transition: transform 0.3s ease;
+  }
+}
+
+/* Right Section */
+.auth-right {
+  flex: 0.8;
+  background: $dark-panel;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  border-left: 1px solid rgba($gold, 0.1);
+
+  .auth-form-container {
+    width: 100%;
+    max-width: 400px;
+
+    .auth-title {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      color: $gold;
+      text-align: center;
+    }
+  }
+}
+
+.auth-form {
+  width: 100%;
+
+  .form-group {
+    margin-bottom: 1.5rem;
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #888;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    input {
+      width: 100%;
+      padding: 1rem;
+      background: $input-bg;
+      border: 1px solid rgba($gold, 0.2);
+      border-radius: 8px;
+      color: #FFFFFF;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+
+      &:focus {
+        outline: none;
+        border-color: $gold;
+        background: rgba($gold, 0.05);
+      }
+
+      &.error {
+        border-color: $error-red;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+
+    .error-text {
+      display: block;
+      margin-top: 0.25rem;
+      color: $error-red;
+      font-size: 0.85rem;
+    }
+  }
+}
+
+.general-error {
+  background: rgba($error-red, 0.1);
+  border: 1px solid $error-red;
+  color: $error-red;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.checkbox-group {
+  margin-bottom: 1rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #888;
+  font-size: 0.9rem;
+  cursor: pointer;
+
+  input[type="checkbox"] {
+    width: auto;
+    accent-color: $gold;
+  }
+
+  span a {
+    color: $gold;
+    text-decoration: none;
+    &:hover { text-decoration: underline; }
+  }
+}
+
+.forgot-link {
+  color: $gold;
+  text-decoration: none;
+  font-size: 0.9rem;
+  &:hover { text-decoration: underline; }
+}
+
+.auth-button {
+  width: 100%;
+  padding: 1rem;
+  background: $gold;
+  border: none;
+  border-radius: 8px;
+  color: #0A0A0A;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+
+  &:hover:not(:disabled) {
+    background: $gold-hover;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba($gold, 0.3);
+  }
+}
+
+// Variables
+$gold: #FFD700;
+$dark-bg: #0A0A0A;
+$text-muted: #888;
+
+.auth-button {
+  // ... (styles précédents)
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(10, 10, 10, 0.3);
+    border-radius: 50%;
+    border-top-color: $dark-bg;
+    animation: spin 1s ease-in-out infinite;
+  }
+}
+
+.auth-redirect {
+  text-align: center;
+  color: $text-muted;
+  font-size: 0.9rem;
+
+  a {
+    color: $gold;
+    text-decoration: none;
+    font-weight: 600;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+/* Responsive Design (Nesting) */
+.auth-container {
+  @media (max-width: 968px) {
+    flex-direction: column;
+  }
+}
+
+.auth-left {
+  @media (max-width: 968px) {
+    padding: 2rem;
+    min-height: 50vh;
+  }
+
+  .hero-title {
+    @media (max-width: 968px) { font-size: 2.5rem; }
+    @media (max-width: 480px) { font-size: 2rem; }
+  }
+
+  .hero-badges {
+    @media (max-width: 480px) { flex-direction: column; }
+  }
+}
+
+.auth-right {
+  @media (max-width: 968px) {
+    border-left: none;
+    border-top: 1px solid rgba($gold, 0.1);
+  }
+}
+
+.form-options {
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

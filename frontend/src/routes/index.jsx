@@ -4,6 +4,9 @@ import Register from '../app/auth/register.jsx';
 import Login from '../app/auth/login.jsx';
 import Dashbord from "../app/dashbord/index.jsx";
 import { ProtectedRoute, PublicRoute } from "./protectedRoutes.jsx";
+import DashbordLayout from "../layouts/index.jsx";
+import Project from "../app/dashbord/project/index.jsx";
+import DetailProject from "../app/dashbord/project/detailProject.jsx";
 
 
 export const router = createBrowserRouter([
@@ -29,10 +32,22 @@ export const router = createBrowserRouter([
     element: <ProtectedRoute />, 
     children: [
       {
-        path: "/dashbord",
-        element: <Dashbord />
-      },
-      // Ajoute tes autres routes protégées ici
+        element: <DashbordLayout />,
+        children: [
+          {
+            path: "/dashbord",
+            element: <Dashbord />
+          },
+          {
+            path: "/dashbord/projets",
+            element: <Project />
+          },
+          {
+            path: "/dashbord/projets/:id",
+            element: <DetailProject />
+          }
+        ]
+      }
     ]
   },
   {

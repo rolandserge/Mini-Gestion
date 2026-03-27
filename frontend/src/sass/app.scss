@@ -1,0 +1,18 @@
+@use "settings";
+// page import style
+@use "app/auth";
+@use "app/layout";
+@use "app/dashbord";
+@use "app/project/index";
+@use "app/project/createProject";
+@use "app/project/detailProject";
+@use "app/tasks/createTask";
+
+
+// component import style
+@use "components/header";
+@use "components/projectCard";
+@use "components/statCard";
+@use "components/cardMenu";
+@use "components/changeStatus";
+@use "components/tasks/taskCardMenu";

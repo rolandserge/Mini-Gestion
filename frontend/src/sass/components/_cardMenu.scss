@@ -1,0 +1,190 @@
+@use "../settings" as *;
+
+.pcm {
+     position: relative;
+     
+     // ── Bouton déclencheur ────────────────────────────────
+     &__trigger {
+          width: 28px;
+          height: 28px;
+          border-radius: 8px;
+          border: none;
+          background: transparent;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 20px;
+          color: $text-soft;
+          transition: $transition;
+          flex-shrink: 0;
+     
+          &:hover, &--open {
+               background: #f1f1f1;
+               color: $text-dark;
+          }
+     }
+ 
+     // ── Dropdown ──────────────────────────────────────────
+     &__dropdown {
+          position: absolute;
+          top: calc(100% + 1px);
+          right: 0;
+          background: $white;
+          border: 0.5px solid $border;
+          border-radius: $radius-lg;
+          width: 210px;
+          box-shadow: $shadow;
+          z-index: 999;
+          animation: pcmDropIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+     }
+ 
+     @keyframes pcmDropIn {
+          from {
+               opacity: 0;
+               transform: translateY(-8px) scale(0.96);
+          }
+          to   {
+               opacity: 1; 
+               transform: translateY(0) scale(1);
+          }
+     }
+ 
+  // ── Section ───────────────────────────────────────────
+     &__section {
+          padding: 3px;
+     }
+     
+     &__section-label {
+          display: block;
+          font-size: 10px;
+          font-weight: 600;
+          color: $text-soft;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          padding: 4px 10px 3px;
+     }
+     
+     // ── Item ──────────────────────────────────────────────
+     &__item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 5px 10px;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 12.5px;
+          color: $text-dark;
+          transition: $transition;
+          text-decoration: none;
+          border: none;
+          background: none;
+          width: 100%;
+          font-family: inherit;
+          text-align: left;
+     
+          &:hover {
+               background: #f5f5f5;
+          }
+          
+          &--active {
+               background: #f5f5f5;
+          }
+          
+          &--danger {
+               color: #A32D2D;
+
+               &:hover {
+                    background: #FEF2F2;
+               }
+          }
+     }
+     
+     // ── Icônes items ──────────────────────────────────────
+     &__item-icon {
+          width: 26px;
+          height: 26px;
+          border-radius: 7px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 14px;
+          flex-shrink: 0;
+          
+          &--detail {
+               background: #EEEDFE;
+               color: #534AB7;
+          }
+          &--edit {
+               background: #E6F1FB;
+               color: #185FA5;
+          }
+          &--status {
+               background: #EAF3DE;
+               color: #3B6D11;
+          }
+          &--danger {
+               background: #FEF2F2;
+               color: #A32D2D;
+          }
+     }
+     
+     // ── Flèche statut ─────────────────────────────────────
+     &__arrow {
+          margin-left: auto;
+          font-size: 14px;
+          color: $text-soft;
+          transition: transform 0.2s ease;
+          line-height: 1;
+          
+          &--open { transform: rotate(90deg); }
+     }
+     
+     // ── Divider ───────────────────────────────────────────
+     &__divider {
+          height: 0.5px;
+          background: $border;
+          margin: 0 6px;
+     }
+     
+     // ── Liste des statuts ─────────────────────────────────
+     &__status-list {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          padding: 4px 6px 2px;
+          animation: pcmDropIn 0.15s ease;
+     }
+     
+     &__status-item {
+          display: flex;
+          align-items: center;
+          gap: 9px;
+          padding: 7px 10px;
+          border-radius: $radius-md;
+          cursor: pointer;
+          font-size: 12px;
+          transition: $transition;
+          border: none;
+          background: none;
+          font-family: inherit;
+          width: 100%;
+          text-align: left;
+     
+          &:hover { background: #f5f5f5; }
+     }
+     
+     &__status-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          flex-shrink: 0;
+     }
+
+     &__status-check {
+          margin-left: auto;
+          font-size: 12px;
+          color: #3B6D11;
+          font-weight: 600;
+     }
+}

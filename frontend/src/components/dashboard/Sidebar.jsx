@@ -4,8 +4,8 @@ const Sidebar = ({ user, activeNav, onNavClick }) => {
   return (
     <aside className="sidebar">
       <div className="sidebar-logo">
-        <div className="logo-text">⚡ TaskFlow</div>
-        <div className="logo-sub">v2.0 Dashboard</div>
+        <div className="logo-text">⚡ Tache Pro</div>
+        <div className="logo-sub">v1.0 Dashboard</div>
       </div>
 
       <div className="nav-section">

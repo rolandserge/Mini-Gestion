@@ -1,0 +1,256 @@
+@use "../settings" as style;
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+// Variables
+// $sidebar-bg: #f1f1f1;
+$sidebar-width: 220px;
+$hover-bg: #ffffff;
+$active-bg: #ffffff;
+$text-primary: #1a1a2e;
+$text-secondary: #6b7280;
+$accent: #4f46e5;
+$active-text: #4f46e5;
+$border-radius: 5px;
+$transition: all 0.2s ease;
+$logo-color: #4f46e5;
+$divider: #e0e0e0;
+
+
+
+.dashbord-layout {
+     display: flex;
+     min-height: 100vh;
+     background-color: #f9f9f9;
+
+     &__main {
+          margin-left: $sidebar-width; // même largeur que $sidebar-width
+          flex: 1;
+          padding: 0px 10px 20px 20px;
+          overflow-y: auto;
+     }
+
+     .sidebar {
+          width: $sidebar-width;
+          min-height: 100vh;
+          // background-color: $sidebar-bg;
+          display: flex;
+          flex-direction: column;
+          padding: 20px 12px;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          border-right: 1px solid $divider;
+          position: fixed;
+          top: 0;
+          left: 0;
+     
+       // ─── Logo ──────────────────────────────────────
+          &__logo {
+               display: flex;
+               align-items: center;
+               gap: 10px;
+               padding: 0 8px 15px;
+               border-bottom: 1px solid $divider;
+               margin-bottom: 24px;
+     
+               .logo-icon {
+                    width: 36px;
+                    height: 36px;
+                    background: $logo-color;
+                    border-radius: 9px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: #fff;
+                    font-size: 18px;
+                    flex-shrink: 0;
+                    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+               }
+     
+               .logo-text {
+                    font-size: 17px;
+                    font-weight: 700;
+                    color: $text-primary;
+                    letter-spacing: -0.3px;
+               
+                    span {
+                    color: $logo-color;
+                    }
+               }
+          }
+     
+          // ─── Nav section ──────────────────────────────
+          &__nav {
+               flex: 1;
+               display: flex;
+               flex-direction: column;
+               gap: 28px;
+          }
+          // ─── Menu group ───────────────────────────────
+          &__group {
+               display: flex;
+               flex-direction: column;
+               gap: 4px;
+          }
+          
+          &__group-label {
+               font-size: 10.5px;
+               font-weight: 600;
+               text-transform: uppercase;
+               letter-spacing: 1px;
+               color: $text-secondary;
+               padding: 0 12px;
+               margin-bottom: 6px;
+          }
+          // ─── Menu item ────────────────────────────────
+          &__item {
+               display: flex;
+               align-items: center;
+               gap: 11px;
+               padding: 8px 12px;
+               border-radius: $border-radius;
+               cursor: pointer;
+               text-decoration: none;
+               color: $text-primary;
+               font-size: 13px;
+               border: none;
+               font-weight: 500;
+               transition: $transition;
+               position: relative;
+     
+          .item-icon {
+               font-size: 17px;
+               color: $text-secondary;
+               flex-shrink: 0;
+               transition: $transition;
+               @include style.flex-center;
+          }
+     
+          .item-label {
+               flex: 1;
+               text-align: left;
+          }
+     
+          // Hover state
+          &:hover {
+               background-color: $hover-bg;
+               color: $text-primary;
+               box-shadow: 0 1px 6px rgba(0, 0, 0, 0.07);
+          
+               .item-icon {
+                    color: $accent;
+               }
+          }
+     
+          // Active state
+          &--active {
+               background-color: $active-bg;
+               color: $active-text;
+               box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+               font-weight: 600;
+          
+               .item-icon {
+                    color: $active-text;
+               }
+     
+               // Barre latérale indicatrice
+               &::before {
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 3px;
+                    height: 60%;
+                    background: $accent;
+                    border-radius: 0 4px 4px 0;
+               }
+         }
+     
+         // Déconnexion en rouge
+          &--danger {
+               color: #ef4444;
+     
+               .item-icon {
+                    color: #ef4444;
+               }
+          
+               &:hover {
+                    background-color: #fff0f0;
+                    color: #dc2626;
+                    box-shadow: 0 1px 6px rgba(239, 68, 68, 0.1);
+          
+                    .item-icon {
+                         color: #dc2626;
+                    }
+               }
+          }
+     }
+     
+       // ─── Divider ──────────────────────────────────
+       &__divider {
+         height: 1px;
+         background-color: $divider;
+         margin: 4px 8px;
+       }
+     
+       // ─── Footer user card ─────────────────────────
+       &__footer {
+         margin-top: auto;
+         padding-top: 20px;
+         border-top: 1px solid $divider;
+     
+         .user-card {
+           display: flex;
+           align-items: center;
+           gap: 10px;
+           padding: 10px 12px;
+           border-radius: $border-radius;
+           cursor: pointer;
+           transition: $transition;
+     
+           &:hover {
+             background-color: $hover-bg;
+             box-shadow: 0 1px 6px rgba(0, 0, 0, 0.07);
+           }
+     
+           .user-avatar {
+             width: 34px;
+             height: 34px;
+             border-radius: 50%;
+             background: linear-gradient(135deg, #4f46e5, #7c3aed);
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             color: #fff;
+             font-size: 13px;
+             font-weight: 700;
+             flex-shrink: 0;
+           }
+     
+           .user-info {
+             flex: 1;
+             overflow: hidden;
+     
+             .user-name {
+               font-size: 13px;
+               font-weight: 600;
+               color: $text-primary;
+               white-space: nowrap;
+               overflow: hidden;
+               text-overflow: ellipsis;
+             }
+     
+             .user-role {
+               font-size: 11px;
+               color: $text-secondary;
+             }
+           }
+     
+           .user-more {
+             font-size: 15px;
+             color: $text-secondary;
+           }
+         }
+       }
+     }
+}

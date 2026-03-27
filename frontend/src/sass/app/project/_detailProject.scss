@@ -1,0 +1,553 @@
+@use "../../settings" as *;
+
+@mixin card { 
+     background: $white;
+     border-radius: $radius-lg;
+     border: 1px solid $border;
+     box-shadow: $shadow;
+}
+ 
+// ── Page ───────────────────────────────────────────────────
+.pd {
+     // font-family: 'DM Sans', sans-serif;
+     // background: $bg;
+     min-height: 100vh;
+     color: $text-dark;
+     animation: fadeUp 0.35s ease both;
+
+     &__subheader {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          padding: 20px 20px;
+          background: $white;
+          border-bottom: 1px solid $border;
+     }
+
+     &__back {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 10px 14px;
+          border-radius: 50px;
+          border: 1px solid $border;
+          background: $white;
+          font-size: 12.5px;
+          color: $text-mid;
+          cursor: pointer;
+          transition: $transition;
+          flex-shrink: 0;
+
+          &:hover { color: $text-dark; box-shadow: $shadow; }
+     }
+
+     &__breadcrumb {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 12.5px;
+          color: $text-soft;
+
+          &-sep { color: $border; }
+
+          strong { 
+               color: $text-dark; 
+               font-weight: 500; 
+          }
+     }
+
+     &__actions {
+          margin-left: auto;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+     }
+
+     &__btn-edit {
+          @include x-center;
+          gap: 5px;
+          padding: 7px 15px;
+          border-radius: 50px;
+          border: 1px solid $border;
+          background: $white;
+          font-size: 13px;
+          font-weight: 500;
+          color: $text-mid;
+          cursor: pointer;
+          transition: $transition;
+
+          &:hover { 
+               color: $text-dark; 
+               box-shadow: $shadow;
+          }
+     }
+
+     &__btn-delete {
+          @include x-center;
+          gap: 5px;
+          padding: 7px 16px;
+          border-radius: 50px;
+          border: 1px solid #fca5a5;
+          background: #FEF2F2;
+          font-size: 13px;
+          font-weight: 500;
+          color: #A32D2D;
+          cursor: pointer;
+          transition: $transition;
+
+          &:hover {
+               background: #fee2e2;
+          }
+     }
+
+     // ── Body ───────────────────────────────────────────────────
+     &__body {
+          padding: 28px 0px;
+          display: flex;
+          flex-direction: column;
+          gap: 22px;
+     }
+
+     // ── Hero ───────────────────────────────────────────────────
+     &__hero {
+          @include card;
+          overflow: hidden;
+
+          &-bar {
+               height: 8px;
+               width: 100%;
+          }
+
+          &-body {
+               padding: 20px 22px;
+               display: flex;
+               align-items: flex-start;
+               gap: 18px;
+          }
+
+          &-icon {
+               width: 52px;
+               height: 52px;
+               border-radius: $radius-md;
+               @include flex-center;
+               font-size: 22px;
+               flex-shrink: 0;
+          }
+
+          &-info { flex: 1; min-width: 0; }
+
+          &-name {
+               font-size: 20px;
+               font-weight: 800;
+               color: $text-dark;
+               margin: 0 0 6px;
+               letter-spacing: -0.3px;
+          }
+
+          &-desc {
+               font-size: 13px;
+               color: $text-mid;
+               line-height: 1.6;
+               margin: 0 5px 12px 0;
+          }
+
+          &-meta {
+               display: flex;
+               flex-direction: column;
+               gap: 12px;
+               align-items: flex-end;
+               flex-shrink: 0;
+          }
+     }
+
+     &__meta-item {
+          text-align: right;
+
+          strong {
+               display: block;
+               font-size: 13px;
+               font-weight: 600;
+               color: $text-dark;
+               margin-bottom: 2px;
+          }
+
+          span { font-size: 11px; color: $text-soft; }
+     }
+
+     // ── Stats ──────────────────────────────────────────────────
+     &__stats {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 14px;
+          padding: 12px;
+          border-radius: 12px;
+          background: white;
+     }
+
+     &__stat-card {
+          @include card;
+          padding: 18px;
+          transition: $transition;
+
+          &:hover { transform: translateY(-2px); box-shadow: $shadow-hover; }
+     }
+
+     &__stat-value {
+          font-family: 'Syne', sans-serif;
+          font-size: 28px;
+          font-weight: 800;
+          color: $text-dark;
+          line-height: 1;
+          margin: 0 0 4px;
+     }
+
+     &__stat-label {
+          font-size: 11px;
+          color: $text-soft;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          font-weight: 500;
+     }
+
+     &__stat-bar {
+          height: 6px;
+          background: #f0f0f0;
+          border-radius: 50px;
+          margin-top: 12px;
+          overflow: hidden;
+     }
+
+     &__stat-fill {
+          height: 100%;
+          border-radius: 50px;
+          transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+     }
+
+     // ── Main grid ──────────────────────────────────────────────
+     &__grid {
+          display: grid;
+          grid-template-columns: 1fr 320px;
+          gap: 20px;
+          position: relative;
+          z-index: 1;
+
+          @media (max-width: 900px) { grid-template-columns: 1fr; }
+     }
+
+     // ── Card générique ─────────────────────────────────────────
+     &__card {
+          @include card;
+          position: relative;
+          z-index: 1;
+
+          &-header {
+               @include flex-between;
+               padding: 18px 22px 14px;
+               border-bottom: 1px solid $border;
+          }
+
+          &-title {
+               font-size: 15px;
+               font-weight: 700;
+               color: $text-dark;
+          }
+     }
+
+     &__btn-add {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          padding: 8px 15px;
+          border-radius: 50px;
+          border: none;
+          background: $indigo;
+          color: $white;
+          font-size: 12.5px;
+          font-weight: 500;
+          cursor: pointer;
+          // font-family: 'DM Sans', sans-serif;
+          transition: $transition;
+
+          &:hover { background: darken($indigo, 8%); }
+     }
+
+     // ── Onglets ────────────────────────────────────────────────
+     &__tabs {
+          display: flex;
+          gap: 2px;
+          padding: 10px 22px 0;
+          // border-bottom: 1px solid $border;
+     }
+
+     &__tab {
+          padding: 7px 14px;
+          font-size: 12.5px;
+          font-weight: 500;
+          color: $text-soft;
+          cursor: pointer;
+          border: none;
+          background: none;
+          border-bottom: 2px solid transparent;
+          transition: $transition;
+          white-space: nowrap;
+
+          &:hover { color: $text-dark; }
+
+          &--active { 
+               color: $indigo;
+               border-bottom-color: $indigo;
+          }
+
+          &-count { font-size: 11px; color: $text-soft; }
+     }
+
+     // ── Tâches ─────────────────────────────────────────────────
+     &__task-list {
+          padding: 8px 12px;
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          position: relative;
+          z-index: 1;
+     }
+
+     &__task {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 10px 10px;
+          border-radius: $radius-sm;
+          cursor: pointer;
+          transition: $transition;
+
+          &:hover { background: #f8f8f8; }
+     }
+
+     &__task-check {
+          font-size: 18px;
+          color: $border;
+          flex-shrink: 0;
+          transition: $transition;
+
+          &--done { color: #1D9E75; }
+     }
+
+     &__task-name {
+          flex: 1;
+          font-size: 13px;
+          color: $text-dark;
+
+          &--done {
+               text-decoration: line-through;
+               color: $text-soft;
+          }
+     }
+
+     &__task-priority {
+          font-size: 10.5px;
+          font-weight: 500;
+          padding: 2px 8px;
+          border-radius: 50px;
+
+          &.tp-high   { background: #FCEBEB; color: #A32D2D; }
+          &.tp-medium { background: #FAEEDA; color: #854F0B; }
+          &.tp-low    { background: #EAF3DE; color: #3B6D11; }
+     }
+
+     &__task-avatar {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          @include flex-center;
+          font-size: 9px;
+          font-weight: 700;
+          color: $white;
+          flex-shrink: 0;
+     }
+
+     &__task-date {
+          font-size: 11px;
+          color: $text-soft;
+          white-space: nowrap;
+     }
+
+     // ── Sidebar ────────────────────────────────────────────────
+     &__sidebar {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+     }
+
+     // ── Progression ────────────────────────────────────────────
+     &__prog-card {
+          @include card;
+          padding: 20px;
+     }
+
+     &__prog-title {
+          font-size: 14px;
+          font-weight: 700;
+          color: $text-dark;
+          margin: 0 0 14px;
+     }
+
+     &__prog-big {
+          display: flex;
+          align-items: flex-end;
+          gap: 8px;
+          margin-bottom: 6px;
+     }
+
+     &__prog-pct {
+          font-family: 'Syne', sans-serif;
+          font-size: 36px;
+          font-weight: 800;
+          color: $text-dark;
+          line-height: 1;
+     }
+
+     &__prog-sub {
+          font-size: 12px;
+          color: $text-soft;
+          margin-bottom: 6px;
+     }
+
+     &__prog-tasks-lbl {
+          font-size: 12px;
+          color: $text-soft;
+          margin: 0 0 8px;
+     }
+
+     &__prog-track {
+          height: 8px;
+          background: #f0f0f0;
+          border-radius: 50px;
+          overflow: hidden;
+          margin-bottom: 16px;
+     }
+
+     &__prog-fill {
+          height: 100%;
+          border-radius: 50px;
+          transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+     }
+
+     &__status-breakdown {
+          display: flex;
+          flex-direction: column;
+          gap: 9px;
+     }
+
+     &__breakdown-row {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 12.5px;
+     }
+
+     &__breakdown-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          flex-shrink: 0;
+     }
+
+     &__breakdown-label { flex: 1; color: $text-mid; }
+     &__breakdown-count { font-weight: 600; color: $text-dark; }
+
+     // ── Membres ────────────────────────────────────────────────
+     &__members-card {
+          @include card;
+          padding: 20px;
+     }
+
+     &__members-title {
+          font-size: 14px;
+          font-weight: 700;
+          color: $text-dark;
+          margin: 0 0 14px;
+     }
+
+     &__members-list {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+     }
+
+     &__member {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          &-avatar {
+               width: 36px;
+               height: 36px;
+               border-radius: 50%;
+               @include flex-center;
+               font-size: 11px;
+               font-weight: 700;
+               color: $white;
+               flex-shrink: 0;
+          }
+
+          &-info { flex: 1; min-width: 0; }
+          &-name { font-size: 13px; font-weight: 500; color: $text-dark; margin: 0; }
+          &-role { font-size: 11.5px; color: $text-soft; margin: 0; }
+
+          &-badge {
+               font-size: 10.5px;
+               font-weight: 500;
+               padding: 2px 8px;
+               border-radius: 50px;
+               flex-shrink: 0;
+
+               &--lead   { background: #EEEDFE; color: #534AB7; }
+               &--dev    { background: #E6F1FB; color: #185FA5; }
+               &--design { background: #EAF3DE; color: #3B6D11; }
+          }
+     }
+
+     // ── Badges statut & priorité ───────────────────────────────
+     &__status-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          padding: 4px 12px;
+          border-radius: 50px;
+          font-size: 12px;
+          font-weight: 500;
+
+          &::before {
+               content: '';
+               width: 6px;
+               height: 6px;
+               border-radius: 50%;
+               background: currentColor;
+               opacity: 0.7;
+          }
+
+          &.s-done     { background: #EAF3DE; color: #3B6D11; }
+          &.s-progress { background: #E6F1FB; color: #185FA5; }
+          &.s-pending  { background: #FAEEDA; color: #854F0B; }
+          &.s-cancel   { background: #FCEBEB; color: #A32D2D; }
+     }
+
+     &__priority-badge {
+          display: inline-block;
+          padding: 4px 12px;
+          border-radius: 50px;
+          font-size: 12px;
+          font-weight: 500;
+
+          &.p-high   { background: #FCEBEB; color: #A32D2D; }
+          &.p-medium { background: #FAEEDA; color: #854F0B; }
+          &.p-low    { background: #EAF3DE; color: #3B6D11; }
+     }
+}
+     // ── Sous-header ────────────────────────────────────────────
+ 
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+ 

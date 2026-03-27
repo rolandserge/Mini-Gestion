@@ -45,7 +45,13 @@ body::before {
 }
 
 /* ─── LAYOUT ─── */
-.dashboard { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+.dashboard { 
+  display: flex; 
+  min-height: 100vh; 
+  position: relative; 
+  z-index: 1;
+  border: 1px solid red;
+}
 
 /* ─── SIDEBAR ─── */
 .sidebar {
@@ -58,7 +64,7 @@ body::before {
   padding: 0;
   position: sticky;
   top: 0;
-  height: 100vh;
+  height: 100%;
 }
 
 .sidebar-logo {

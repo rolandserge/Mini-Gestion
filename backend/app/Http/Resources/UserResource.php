@@ -19,6 +19,7 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'nom' => $this->name,
             'email' => $this->email,
+            'status' => $this->status_compte,
             // Relations (chargées seulement si with())
             'creationHeure' => $this->created_at?->toISOString(),
             'modificationHeure' => $this->updated_at?->toISOString(),

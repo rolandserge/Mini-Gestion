@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo } from 'react';
 
 export const useDashboard = () => {
+
   const [tasks, setTasks] = useState([
     { 
       id: 1, 
@@ -44,7 +45,7 @@ export const useDashboard = () => {
       desc: "PostgreSQL → v15", 
       status: "inprogress", 
       priority: "haute", 
-      assignee: "TK", 
+      assignee: "TK",
       done: false 
     },
     { 
@@ -187,7 +188,6 @@ export const useDashboard = () => {
     isModalOpen,
     projects,
     stats,
-    
     // Actions
     toggleDone,
     changeStatus,

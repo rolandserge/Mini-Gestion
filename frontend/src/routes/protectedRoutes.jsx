@@ -11,7 +11,8 @@ export const ProtectedRoute = () => {
   }
 
   // 2. Vérifier l'auth
-  return isAuthenticated ? <Outlet /> : <Navigate to="/auth/login" replace />;
+  // return isAuthenticated ? <Outlet /> : <Navigate to="/auth/login" replace />;
+  return <Outlet />
 };
 
 export const PublicRoute = () => {

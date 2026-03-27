@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,800&display=swap');
+
+* {
+     margin: 0;
+     padding: 0;
+     box-sizing: border-box;
+     font-family: 'Poppins', sans-serif;
+}
+
+/*
+    RESSOURCES 
+
+    0px---600px ( PHONE )
+    600px---900px ( TABLET PORTRAIT )
+    900px---1200px ( TABLET LANDSCAPE )
+    1200px-- 1800px ( NORMAL PC )
+    1800px--- +00 ( BIG DESKTOP )
+
+*/
+// couleur
+$bg: #f1f1f1;
+$white: #ffffff;
+// Accent palette
+$indigo: #4f46e5;
+$violet: #7c3aed;
+$emerald: #059669;
+$amber: #d97706;
+$rose: #e11d48;
+$sky: #0284c7;
+$fuchsia: #a21caf;
+$transition:  all 0.2s ease;
+$text-dark:   #111827;
+$text-soft:   #9ca3af;
+$border:      #e5e7eb;
+$indigo:      #534AB7;
+$text-mid:    #4b5563;
+$radius-lg:   16px;
+$radius-md:   12px;
+$radius-sm:   8px;
+$shadow: 0 2px 12px rgba(0,0,0,0.06);
+$shadow-hover: 0 6px 24px rgba(0,0,0,0.1);
+
+// responsive
+$mobile: 480px;
+$sm: 640px;
+$mobile-max: 768px;
+$tablet: 834px;
+$lg: 960px;
+$xl: 1200px;
+$tablet-max: 1024px;
+$laptop: 1440px;
+
+//mixin
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin y-center {
+  display: flex;
+  justify-content: center;
+}
+
+@mixin x-center {
+  display: flex;
+  align-items: center;
+}
+
+@mixin flex-between { 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin responsive($breakpoint) {
+    //PHONE
+    @if $breakpoint == phone {
+      @media (max-width: 37.5em) {
+        @content;
+      }
+    }
+    //TABLET PORTRAIT
+    @if $breakpoint == tab-port {
+      @media (max-width: 56.25em) {
+        @content;
+      }
+    }
+    //TABLET LANDSCAPE
+    @if $breakpoint == tab-land {
+      @media (max-width: 75em) {
+        @content;
+      }
+    }
+    //NORMAL
+    @if $breakpoint == normal {
+      @media (max-width: 112.5em) {
+        @content;
+      }
+    }
+    //BIG DESKTOP
+    @if $breakpoint == big-desktop {
+      @media (min-width: 112.5em) {
+        @content;
+      }
+    }
+}

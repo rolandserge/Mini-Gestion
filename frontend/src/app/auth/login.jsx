@@ -5,7 +5,7 @@ import { useTheme } from "../useTheme";
 import { useForm } from "react-hook-form"
 import { toast } from 'sonner';
 import { useAuth }  from "../../store/authStore.js";
-import "../../styles/auth.css";
+
 
 const IconMail = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
